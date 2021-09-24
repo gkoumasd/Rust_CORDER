@@ -1,0 +1,1 @@
+pub fn get_app_dir (_t : AppDataType) -> Result < PathBuf , AppDirsError > { Err (AppDirsError :: NotSupported) }

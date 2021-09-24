@@ -1,0 +1,1 @@
+# [doc = " Returns a 256-bit vector with all bits set to 1."] # [target_feature (enable = "avx2")] pub fn ones256 () -> __m256i { _mm256_set1_epi8 (0xFF as u8 as i8) }

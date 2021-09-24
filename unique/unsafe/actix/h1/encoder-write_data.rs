@@ -1,0 +1,1 @@
+# [doc = " # Safety"] # [doc = " Callers must ensure that the given length matches given value length."] fn write_data (value : & [u8] , buf : * mut u8 , len : usize) { debug_assert_eq ! (value . len () , len) ; copy_nonoverlapping (value . as_ptr () , buf , len) ; }

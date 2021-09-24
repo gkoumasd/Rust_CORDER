@@ -1,0 +1,1 @@
+# [doc = " # Safety"] # [doc = " Caller must ensure the buffer has the correct size and alignment."] # [inline] fn cast_slice (buf : & mut [u8]) -> & mut [u64] { debug_assert ! (buf . len () . trailing_zeros () >= 3) ; debug_assert ! ((buf . as_ptr () as usize) . trailing_zeros () >= 3) ; slice :: from_raw_parts_mut (buf . as_mut_ptr () as * mut u64 , buf . len () >> 3) }

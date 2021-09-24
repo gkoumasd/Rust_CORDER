@@ -1,0 +1,1 @@
+# [doc = " Returns true if and only if all bits in the given 256-bit vector are 0."] # [target_feature (enable = "avx2")] pub fn is_all_zeroes256 (a : __m256i) -> bool { let cmp = _mm256_cmpeq_epi8 (a , zeroes256 ()) ; _mm256_movemask_epi8 (cmp) as u32 == 0xFFFFFFFF }

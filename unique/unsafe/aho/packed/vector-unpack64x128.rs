@@ -1,0 +1,1 @@
+# [doc = " Unpack the given 128-bit vector into its 64-bit components. The first"] # [doc = " element of the array returned corresponds to the least significant 64-bit"] # [doc = " lane in `a`."] # [target_feature (enable = "ssse3")] pub fn unpack64x128 (a : __m128i) -> [u64 ; 2] { [_mm_cvtsi128_si64 (a) as u64 , _mm_cvtsi128_si64 (_mm_srli_si128 (a , 8)) as u64 ,] }

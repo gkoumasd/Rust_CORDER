@@ -1,0 +1,1 @@
+# [doc = " Shift `a` to the left by one byte (removing its most significant byte), and"] # [doc = " concatenate it with the the most significant byte of `b`."] # [target_feature (enable = "avx2")] pub fn alignr256_15 (a : __m256i , b : __m256i) -> __m256i { let v = _mm256_permute2x128_si256 (b , a , 0x21) ; _mm256_alignr_epi8 (a , v , 15) }

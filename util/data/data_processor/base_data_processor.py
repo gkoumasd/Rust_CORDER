@@ -11,7 +11,7 @@ from util.data.data_loader.token_vocab_extractor import TokenVocabExtractor
 
 excluded_tokens = [",","{",";","}",")","(",'"',"'","`",""," ","[]","[","]","/",":",".","''","'.'", "\\", "'['", "']","''","_","__"]
 
-class s():
+class DataProcessor():
    
     def __init__(self, node_type_vocab_path, node_token_vocab_path, data_path, parser):
         

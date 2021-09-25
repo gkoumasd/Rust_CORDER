@@ -11,7 +11,7 @@ from util.data.data_loader.token_vocab_extractor import TokenVocabExtractor
 
 excluded_tokens = [",","{",";","}",")","(",'"',"'","`",""," ","[]","[","]","/",":",".","''","'.'", "\\", "'['", "']","''","_","__"]
 
-class DataProcessor():
+class s():
    
     def __init__(self, node_type_vocab_path, node_token_vocab_path, data_path, parser):
         
@@ -23,9 +23,17 @@ class DataProcessor():
         #self.node_token_lookup = self.load_node_token_vocab(token_vocab_path)
         #self.node_type_lookup = self.load_node_type_vocab(node_type_vocab_path)
         #Load vocabs
-        self.init_vocabs()
-
         
+        if '/train' in self.data_path: #Extract tokens for train data only
+            token_ext = TokenVocabExtractor(self.data_path, self.node_token_vocab_path)
+            token_ext.create_vocab_from_dir()
+            self.node_token_lookup = self.load_node_token_vocab(self.node_token_vocab_path)
+
+        if os.path.exists(self.node_type_vocab_path):
+             
+             self.node_type_lookup = self.load_node_type_vocab(self.node_type_vocab_path)
+        else:
+             print ('Create', self.node_type_vocab_path)
 
         base_name =os.path.basename(data_path)
         
@@ -56,21 +64,8 @@ class DataProcessor():
         #    self.convert_trees_into_training_indices(self.trees)
         #    pickle.dump(self.buckets, open(self.buckets_name_path, "wb" ) )
             
-    def init_vocabs(self):
-
-         if os.path.exists(self.node_token_vocab_path):
-             self.node_token_lookup = self.load_node_token_vocab(self.node_token_vocab_path)
-         else:
-            token_ext = TokenVocabExtractor(self.data_path, self.node_token_vocab_path)
-            token_ext.create_vocab_from_dir()
-            self.node_token_lookup = self.load_node_token_vocab(self.node_token_vocab_path)
+    
             
-         if os.path.exists(self.node_type_vocab_path):
-             
-             self.node_type_lookup = self.load_node_type_vocab(self.node_type_vocab_path)
-         else:
-             print ('Create', self.node_type_vocab_path)    
-
     
     def load_node_token_vocab(self, node_token_vocab_path):
         node_token_lookup = {}

@@ -108,8 +108,8 @@ class TreeSitterRustDataProcessor(DataProcessor):
                         child_token = text[child.start_byte:child.end_byte]
                         child_sub_tokens  = self.token_vocab.split_identifier_into_parts(child_token.decode('utf-8'))
                         child_sub_tokens_id = [self.node_token_lookup.get(child_sub_token) for child_sub_token in child_sub_tokens]
-                        #Replace None values with unknown token
-                        child_sub_tokens_id = [list(self.node_token_lookup.items())[-1][1]+1 if child_sub_token_id is None else child_sub_token_id for child_sub_token_id in child_sub_tokens_id]
+                        #Replace None values with UKN_token indexed to 0
+                        child_sub_tokens_id = [0 if child_sub_token_id is None else child_sub_token_id for child_sub_token_id in child_sub_tokens_id]
                         #print(child_sub_tokens_id, child_sub_tokens, child_token)
                         #child_sub_tokens = subtokens.split(' ')
                         #subtokens = " ".join(identifier_splitting.split_identifier_into_parts(child_token.decode('utf-8')))

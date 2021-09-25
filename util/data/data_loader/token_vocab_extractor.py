@@ -23,8 +23,8 @@ else:
 
 
 class TokenVocabExtractor():
-    def __init__(self, input_data_path: str, node_token_vocab_path:str):
-        self.input_data_path = input_data_path
+    def __init__(self, data_path: str, node_token_vocab_path:str):
+        self.data_path = data_path
         self.node_token_vocab_path = node_token_vocab_path
       
         
@@ -32,23 +32,29 @@ class TokenVocabExtractor():
       
        
         #Extract tokens fron code snippets
-        all_tokens = []        
-        for subdir , dirs, files in os.walk(self.input_data_path): 
+        all_tokens = []     
+       
+        for subdir , dirs, files in os.walk(self.data_path): 
             for file in tqdm(files):
                 file_path = os.path.join(subdir, file)
-                #print(file_path)
-                with open(file_path, "r", errors='ignore') as f:
-                    data = str(f.read())
-                    tokens = self.split_identifier_into_parts(data)
+                if file.endswith(".rs"):
+                    print(file_path)
+                    with open(file_path, "r", errors='ignore') as f:
+                        data = str(f.read())
+                        tokens = self.split_identifier_into_parts(data)
+                        
+                    for token in tokens:
+                        if (len(token)>1):
+                            token = re.sub('[\(\)\[\]]', '', token) #Since AST removes ()[] from tokens
+                        all_tokens.append(token)
                     
-                for token in tokens:
-                    if (len(token)>1):
-                        token = re.sub('[\(\)\[\]]', '', token)
-                    all_tokens.append(token)
-                    
-        unique_tokens = np.array(all_tokens)  
-        unique_tokens = np.unique(unique_tokens).tolist() 
-        #unique_tokens = unique_tokens[:64600]
+        
+         
+        unique_tokens = np.unique(all_tokens).tolist()
+        # Add the UKN token in the beggining
+        unique_tokens.insert(0,'UKN_token')
+        
+    
         unique_tokens = unique_tokens[:60000]
                  
         if os.path.exists(self.node_token_vocab_path):

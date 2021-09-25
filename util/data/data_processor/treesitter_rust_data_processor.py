@@ -55,7 +55,7 @@ class TreeSitterRustDataProcessor(DataProcessor):
                         trees.append(tree_data) 
                         
                     except Exception as e:
-                        print(e, 'what???')    
+                        print(e, 'what??')    
                         
         print("Total processed files : " + str(count_processed_files))
         return trees

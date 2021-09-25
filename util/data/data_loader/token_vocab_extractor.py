@@ -51,7 +51,7 @@ class TokenVocabExtractor():
         
          
         unique_tokens = np.unique(all_tokens).tolist()
-        # Add the UKN token in the beggining
+        ## Add the UKN token in the beggining
         unique_tokens.insert(0,'UKN_token')
         
     

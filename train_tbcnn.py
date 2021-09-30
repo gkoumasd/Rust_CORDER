@@ -1,10 +1,10 @@
+import os
 import argparse
 import random
 import pickle
 import tensorflow.compat.v1 as tf
 from util.data.data_loader.base_data_loader import BaseDataLoader
 from util.threaded_iterator import ThreadedIterator
-import os
 import sys
 import re
 import copy
@@ -38,7 +38,7 @@ def main(train_opt, test_opt):
     tbcnn_model.feed_forward()
 
     train_data_loader = BaseDataLoader(train_opt.batch_size, train_opt.label_size, train_opt.tree_size_threshold_upper, train_opt.tree_size_threshold_lower, train_opt.train_path, True)
-    train_data_loader = BaseDataLoader(test_opt.batch_size, test_opt.label_size, test_opt.tree_size_threshold_upper, test_opt.tree_size_threshold_lower, test_opt.test_path, False)
+    test_data_loader = BaseDataLoader(test_opt.batch_size, test_opt.label_size, test_opt.tree_size_threshold_upper, test_opt.tree_size_threshold_lower, test_opt.test_path, False)
 
     optimizer = RAdamOptimizer(train_opt.lr)
 

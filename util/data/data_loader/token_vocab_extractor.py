@@ -55,7 +55,7 @@ class TokenVocabExtractor():
         unique_tokens.insert(0,'UKN_token')
         
     
-        unique_tokens = unique_tokens[:60000]
+        unique_tokens = unique_tokens[:55000]
                  
         if os.path.exists(self.node_token_vocab_path):
             os.remove(self.node_token_vocab_path)

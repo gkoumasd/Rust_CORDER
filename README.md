@@ -41,5 +41,6 @@ This step will process the AST trees, which comprises of 2 steps. First, it will
        
 ![plot](test.png)
 
+0 = safe, 1= unsafe
 
 

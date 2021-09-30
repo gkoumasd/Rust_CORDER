@@ -28,10 +28,21 @@ This step will process the AST trees, which comprises of 2 steps. First, it will
     - ```source tbcnn_training_script.sh```
 	
 2. To test the model:
-    - ```source tbcnn_test_script.sh```    
+    - ```source tbcnn_test_script.sh``` 
+    
+    
+## Results
+
+1. To train the model:
+    - ```source tbcnn_training_script.sh```
+	
+2. To test the model:
+    - ```source tbcnn_test_script.sh```        
 
 
+![plot](training.png)
 
+![plot](test.png)
 
 
 

@@ -43,4 +43,6 @@ This step will process the AST trees, which comprises of 2 steps. First, it will
 
 0 = safe, 1= unsafe
 
+The results on test subset mean that all code snippets have been classified as safe. 
+
 

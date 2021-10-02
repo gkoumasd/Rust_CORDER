@@ -152,7 +152,7 @@ class DataProcessor():
     def extract_training_data(self, tree_data):
         
         tree, label, sub_tokens, size, file_path = tree_data["tree"], tree_data["label"], tree_data["sub_tokens"] , tree_data["size"], tree_data["file_path"]
-        print("Extracting............", file_path)
+        # print("Extracting............", file_path)
         # print(tree)
         node_type_id = []
         node_token = []

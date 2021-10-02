@@ -29,49 +29,36 @@ class TokenVocabExtractor():
       
         
     def create_vocab_from_dir(self): 
-      
-       
-        #Extract tokens fron code snippets
-        all_tokens = []     
-       
-        for subdir , dirs, files in os.walk(self.data_path): 
-            for file in tqdm(files):
-                file_path = os.path.join(subdir, file)
-                if file.endswith(".rs"):
-                    print(file_path)
-                    with open(file_path, "r", errors='ignore') as f:
-                        data = str(f.read())
-                        tokens = self.split_identifier_into_parts(data)
-                        
-                    for token in tokens:
-                        if (len(token)>1):
-                            token = re.sub('[\(\)\[\]]', '', token) #Since AST removes ()[] from tokens
-                        all_tokens.append(token)
-                    
-        
-         
-        unique_tokens = np.unique(all_tokens).tolist()
-        ## Add the UKN token in the beggining
-        unique_tokens.insert(0,'UKN_token')
-        
-    
-        unique_tokens = unique_tokens[:55000]
-                 
-        if os.path.exists(self.node_token_vocab_path):
-            os.remove(self.node_token_vocab_path)
-        
-        token_file = open(self.node_token_vocab_path, "w")
-        for i, token in enumerate(unique_tokens):
-            if (len(token)==0):
-                continue
-            if (i<len(unique_tokens)-1):
-                token_file.write(token + "\n")
-            else:
-                token_file.write(token)
-        token_file.close() 
-        print('Token file has been created!')
-        
-        
+        if not os.path.exists(self.node_token_vocab_path):
+            #Extract tokens fron code snippets
+            all_tokens = []
+            for subdir , dirs, files in os.walk(self.data_path): 
+                for file in tqdm(files):
+                    file_path = os.path.join(subdir, file)
+                    if file.endswith(".rs"):
+                        # print(file_path)
+                        with open(file_path, "r", errors='ignore') as f:
+                            data = str(f.read())
+                            tokens = self.split_identifier_into_parts(data) 
+                        for token in tokens:
+                            if (len(token)>1):
+                                token = re.sub('[\(\)\[\]]', '', token) #Since AST removes ()[] from tokens
+                            all_tokens.append(token)
+            unique_tokens = np.unique(all_tokens).tolist()
+            ## Add the UKN token in the beggining
+            unique_tokens.insert(0,'UKN_token')
+            unique_tokens = unique_tokens[:55000]
+            token_file = open(self.node_token_vocab_path, "w")
+            for i, token in enumerate(unique_tokens):
+                if (len(token)==0):
+                    continue
+                if (i<len(unique_tokens)-1):
+                    token_file.write(token + "\n")
+                else:
+                    token_file.write(token)
+            token_file.close()
+            print('Token file has been created!')
+        print("Token file %s\n" % self.node_token_vocab_path)
         
     def split_identifier_into_parts(self,identifier: str) -> List[str]:
         """

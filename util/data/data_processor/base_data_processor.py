@@ -18,8 +18,7 @@ class DataProcessor():
         self.node_type_vocab_path = node_type_vocab_path
         self.node_token_vocab_path = node_token_vocab_path
         self.data_path = data_path
-        
-    
+           
         #Load vocabs
         
         if '/train' in self.data_path: #Extract tokens for train data only
@@ -45,7 +44,6 @@ class DataProcessor():
 
         self.bucket_sizes = np.array(list(range(30 , 7500 , 10)))
         self.buckets = defaultdict(list)
-
 
         if os.path.exists(self.simple_tree_pkl_path):
              print("Simple trees path exists, loading the pickle....")

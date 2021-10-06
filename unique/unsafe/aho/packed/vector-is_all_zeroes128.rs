@@ -1,1 +1,0 @@
-# [doc = " Returns true if and only if all bits in the given 128-bit vector are 0."] # [target_feature (enable = "ssse3")] pub fn is_all_zeroes128 (a : __m128i) -> bool { let cmp = _mm_cmpeq_epi8 (a , zeroes128 ()) ; _mm_movemask_epi8 (cmp) as u32 == 0xFFFF }

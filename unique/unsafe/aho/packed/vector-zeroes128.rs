@@ -1,1 +1,0 @@
-# [doc = " Returns a 128-bit vector with all bits set to 0."] # [target_feature (enable = "sse2")] pub fn zeroes128 () -> __m128i { _mm_set1_epi8 (0) }

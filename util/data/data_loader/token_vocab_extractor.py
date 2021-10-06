@@ -57,7 +57,7 @@ class TokenVocabExtractor():
                 else:
                     token_file.write(token)
             token_file.close()
-            print('Token file has been created!')
+            print('Token file has been created!\n')
         print("Token file %s\n" % self.node_token_vocab_path)
         
     def split_identifier_into_parts(self,identifier: str) -> List[str]:

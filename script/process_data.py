@@ -8,7 +8,8 @@ from util.data.data_processor.pycparser_data_processor import PycParserDataProce
 from util.data.data_processor.treesitter_c_data_processor import TreeSitterCDataProcessor
 from util.data.data_processor.srcml_data_processor import SrcmlDataProcessor
 from util.data.data_processor.treesitter_rust_data_processor import TreeSitterRustDataProcessor
-import tree_sitter_parsers
+
+
 
 def parse_arguments(): 
     parser = argparse.ArgumentParser()

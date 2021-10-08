@@ -21,7 +21,7 @@ def parse_arguments():
     parser.add_argument('--epochs', type=int, default=20,
                         help='number of epochs to train for')
     parser.add_argument('--lr', type=float, default=0.001, help='learning rate')
-    parser.add_argument('--cuda', default="1", type=str, help='enables cuda')
+    parser.add_argument('--cuda', default="0", type=str, help='enables cuda')
     parser.add_argument('--verbal', type=bool, default=True,
                         help='print training info or not')
     parser.add_argument('--model_path', default="model",

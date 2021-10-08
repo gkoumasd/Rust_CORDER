@@ -1,3 +1,4 @@
+image:
+  file: Dockerfile
 tasks:
-        - before: wget https://github.com/yijunyu/cargo-geiger/raw/datasets/datasets/unique.tar.xz && mkdir -p data && tar xfJ unique.tar.xz -C data/ && pip install -r requirements.txt && python split_data.py
-          command: cd script && source process_data.sh
+  - command: python3 live_test.py --test_file "test/0.java" --output_file "test/0.csv"

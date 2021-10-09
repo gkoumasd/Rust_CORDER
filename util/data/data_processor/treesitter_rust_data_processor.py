@@ -121,6 +121,12 @@ class TreeSitterRustDataProcessor(DataProcessor):
                         
                         #Replace None values with UKN_token indexed to 0
                         child_sub_tokens_id = [0 if child_sub_token_id is None else child_sub_token_id for child_sub_token_id in child_sub_tokens_id]
+                        
+                        #Check if index exceeds the max voc index 
+                        if (max(self.node_token_lookup.values()) + 1 in child_sub_tokens_id):
+                            print(child_sub_tokens, ':', child_sub_tokens_id)
+                            break
+                        
                         #print(child_sub_tokens_id, child_sub_tokens)
                         #child_sub_tokens = subtokens.split(' ')
                         #subtokens = " ".join(identifier_splitting.split_identifier_into_parts(child_token.decode('utf-8')))

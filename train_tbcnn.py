@@ -14,6 +14,7 @@ import copy
 import numpy as np
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, f1_score
 from datetime import datetime
+from tqdm import *
 
 from keras_radam.training import RAdamOptimizer
 import logging
@@ -62,7 +63,7 @@ def main(train_opt, test_opt):
         for epoch in range(1,  train_opt.epochs + 1):
             train_batch_iterator = ThreadedIterator(train_data_loader.make_minibatch_iterator(), max_queue_size=train_opt.worker)
             for train_step, train_batch_data in enumerate(train_batch_iterator):
-                print("***************")
+                #print("***************")
 
                 # print(train_batch_data["batch_node_index"].shape)
                 # print(train_batch_data["batch_node_type_id"].shape)
@@ -98,9 +99,9 @@ def main(train_opt, test_opt):
                     predictions = []
                     test_batch_iterator = ThreadedIterator(test_data_loader.make_minibatch_iterator(), max_queue_size=test_opt.worker)
                     for test_step, test_batch_data in enumerate(test_batch_iterator):
-                        print("***************")
+                        #print("***************")
 
-                        print(test_batch_data["batch_size"])
+                        #print(test_batch_data["batch_size"])
                         scores = sess.run(
                                 [tbcnn_model.softmax],
                                 feed_dict={
@@ -116,14 +117,14 @@ def main(train_opt, test_opt):
                         batch_correct_labels = list(np.argmax(test_batch_data["batch_labels_one_hot"],axis=1))
                         batch_predictions = list(np.argmax(scores[0],axis=1))
                     
-                        print(batch_correct_labels)
-                        print(batch_predictions)
+                        #print(batch_correct_labels)
+                        #print(batch_predictions)
 
                         correct_labels.extend(np.argmax(test_batch_data["batch_labels_one_hot"],axis=1))
                         predictions.extend(np.argmax(scores[0],axis=1))
 
-                    print(correct_labels)
-                    print(predictions)
+                    #print(correct_labels)
+                    #print(predictions)
                     f1 = float(f1_score(correct_labels, predictions, average="micro"))
                     print(classification_report(correct_labels, predictions))
                     print('F1:', f1)

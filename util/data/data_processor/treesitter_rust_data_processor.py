@@ -7,6 +7,7 @@ from util.data.data_processor.ast_parser import ASTParser
 from util import identifier_splitting
 from util.data.data_loader.token_vocab_extractor import TokenVocabExtractor
 from nltk.stem import PorterStemmer
+from statistics import mean, stdev, median
 
 class TreeSitterRustDataProcessor(DataProcessor):
     def __init__(self, node_type_vocab_path, node_token_vocab_path, data_path, parser):
@@ -19,6 +20,7 @@ class TreeSitterRustDataProcessor(DataProcessor):
     def load_program_data(self, directory):
         
         trees = []
+        sizes = []
         count_processed_files = 0
         
         for subdir , dirs, files in os.walk(directory): 
@@ -62,11 +64,25 @@ class TreeSitterRustDataProcessor(DataProcessor):
                             }
                         
                         trees.append(tree_data) 
+                        sizes.append(size)
                         
                     except Exception as e:
                         print(e, 'what??')    
                         
         print("Total processed files : " + str(count_processed_files))
+        
+        #Perform analysis size
+        mean_size = mean(sizes)
+        stdev_size = stdev(sizes)
+        median_size = median(sizes)
+        size_threshold_upper = sum(i > 1500 for i in sizes)
+        
+        file1 = open("size_analysis_"+file_path_splits[-3] + ".txt","w")
+        file1.write("In %s subset, the mean size of trees is %.1f (STD=%.2f, Median:%.2f). The max and min is  %.1f and  %.1f \n"%(file_path_splits[-3],mean_size,stdev_size,median_size,max(sizes),min(sizes)))
+        file1.write("Total processed files : %s \n"%str(count_processed_files))
+        file1.write("Total files exceed upper threshold (1500): %d \n"%size_threshold_upper)
+        file1.close()
+       
         return trees
             
     def simplify_ast(self, tree, text): #tree-> ast, text->code_snippet

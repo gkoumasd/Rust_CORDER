@@ -1,6 +1,6 @@
 PARSER=treesitter_rust
 TRAIN_PATH=${PARSER}_train_test_val/${PARSER}-buckets-train.pkl
-TEST_PATH=${PARSER}_train_test_val/${PARSER}-buckets-val.pkl
+TEST_PATH=${PARSER}_train_test_val/${PARSER}-buckets-test.pkl
 NODE_TYPE_VOCABULARY_PATH=vocab/${PARSER}/node_type/type.txt
 TOKEN_VOCABULARY_PATH=vocab/${PARSER}/node_token/token.txt
 BATCH_SIZE=4
@@ -17,7 +17,7 @@ EPOCH=120
 PYTHON=python3
 NODE_INIT=2
 BEST_F1=0.0
-${PYTHON} train_tbcnn.py \
+${PYTHON} test_tbcnn.py \
 --train_path ${TRAIN_PATH} --test_path ${TEST_PATH} --batch_size ${BATCH_SIZE} \
 --checkpoint_every ${CHECKPOINT_EVERY} --cuda ${CUDA} --validating ${VALIDATING} \
 --tree_size_threshold_upper ${TREE_SIZE_THRESHOLD_UPPER} \
@@ -25,5 +25,4 @@ ${PYTHON} train_tbcnn.py \
 --node_type_dim ${NODE_TYPE_DIM} --node_token_dim ${NODE_TOKEN_DIM} \
 --node_type_vocabulary_path ${NODE_TYPE_VOCABULARY_PATH} \
 --token_vocabulary_path ${TOKEN_VOCABULARY_PATH} --epochs ${EPOCH} --parser ${PARSER} \
---node_init ${NODE_INIT} --num_conv ${NUM_CONV} --conv_output_dim ${CONV_OUTPUT_DIM} \
---best_f1 ${BEST_F1}
+--node_init ${NODE_INIT} --num_conv ${NUM_CONV} --conv_output_dim ${CONV_OUTPUT_DIM}

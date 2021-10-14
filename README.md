@@ -27,9 +27,15 @@ This step will process the AST trees, which comprises of 2 steps. First, it will
 1. To train the model:
     - ```source tbcnn_training_script.sh```
     
+2. To test the model:
+    - ```source tbcnn_test_script.sh``` 
+    
+    
+    
+## Results
 
+1. Performance on test subset:
+       
+![plot](test.png)
 
-
-
-
-
+0 = safe, 1= unsafe

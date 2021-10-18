@@ -30,13 +30,13 @@ def split_data(category):
     
     
     for file in X_train:
-        shutil.copy2(file, 'data_train_test_val/train/' + category)
+        shutil.copy2(file, 'treesitter_rust_train_test_val/train/' + category)
     
     for file in X_test:
-        shutil.copy2(file, 'data_train_test_val/test/' + category)  
+        shutil.copy2(file, 'treesitter_rust_train_test_val/test/' + category)  
         
     for file in X_valid:
-        shutil.copy2(file, 'data_train_test_val/val/' + category)  
+        shutil.copy2(file, 'treesitter_rust_train_test_val/val/' + category)  
         
         
 split_data('safe')

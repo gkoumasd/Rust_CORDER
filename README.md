@@ -39,3 +39,16 @@ This step will process the AST trees, which comprises of 2 steps. First, it will
 ![plot](test.png)
 
 0 = safe, 1= unsafe
+
+
+## Inference
+
+To perform automatic debugging for rust code snippets do the following steps:
+    
+    - ```cd inference```
+    - upload the rust files on the inference/data folder
+    - ```source process_data.sh```
+    - ```source inference.sh```
+    
+    
+![plot](inference.png)    

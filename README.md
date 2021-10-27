@@ -43,7 +43,7 @@ This step will process the AST trees, which comprises of 2 steps. First, it will
 
 ## Inference
 
-To perform automatic debugging for rust code snippets do the following steps:
+1. To perform automatic debugging for rust code snippets do the following steps:
     
     + ```cd inference```
     + upload the rust files on the inference/data folder

@@ -45,10 +45,10 @@ This step will process the AST trees, which comprises of 2 steps. First, it will
 
 To perform automatic debugging for rust code snippets do the following steps:
     
-    - ```cd inference```
-    - ```upload the rust files on the inference/data folder```
-    - ```source process_data.sh```
-    - ```source inference.sh```
+    + ```cd inference```
+    + upload the rust files on the inference/data folder
+    + ```source process_data.sh```
+    + ```source inference.sh```
     
     
 ![plot](inference.png)    

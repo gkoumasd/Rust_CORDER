@@ -40,4 +40,4 @@ def split_data(category):
         
         
 split_data('safe')
-split_data('unsafe')        
+split_data('unsafe')

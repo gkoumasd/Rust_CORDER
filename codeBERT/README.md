@@ -19,3 +19,6 @@ After these steps, you can see the data in the treesitter_rust_train_test_val fo
 
 This step will process the data and save input_ids, attention_masks, and labels to pickle files for the train, val, and test subdatasets.
 
+## Fine-Tuning 
+
+## Evaluation

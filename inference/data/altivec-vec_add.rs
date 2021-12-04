@@ -1,1 +1,0 @@
-# [doc = " Vector add."] # [inline] # [target_feature (enable = "altivec")] pub fn vec_add < T , U > (a : T , b : U) -> < T as sealed :: VectorAdd < U > > :: Result where T : sealed :: VectorAdd < U > , { a . vec_add (b) }

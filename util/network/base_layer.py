@@ -21,7 +21,7 @@ class BaseLayer():
     
     def load_node_token_vocab(self, token_vocab_path):
         node_token_lookup = {}
-        with open(token_vocab_path, "r", encoding='utf-8') as f:
+        with open(token_vocab_path, "r") as f:
             data = f.readlines()
            
             for i, line in enumerate(data):
@@ -32,7 +32,7 @@ class BaseLayer():
 
     def load_node_type_vocab(self, node_type_vocab_path):
         node_type_lookup = {}
-        with open(node_type_vocab_path, "r", encoding='utf-8') as f:
+        with open(node_type_vocab_path, "r") as f:
             data = f.readlines()
            
             for i, line in enumerate(data):

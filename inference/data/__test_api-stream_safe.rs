@@ -1,1 +1,0 @@
-pub fn stream_safe (s : & str) -> String { StreamSafe :: new (s . chars ()) . collect () }

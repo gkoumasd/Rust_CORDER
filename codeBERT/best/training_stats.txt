@@ -1,1 +1,0 @@
-{'epoch': 4, 'Training Loss': 0.03948695408670526, 'Valid. Loss': 0.026993274688720703, 'Training Accuracy.': 0.5, 'Valid. Accuracy': 0.5, 'Training Precision': 0.5, 'Valid. Precision': 0.5, 'Training Recall': 0.5, 'Valid. Recall': 0.5, 'Training f1': 0.5, 'Valid. f1': 0.5}

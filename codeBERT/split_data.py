@@ -7,7 +7,7 @@ import shutil
 
 def split_data(category):
 
-    directory = 'codeBERT/data/' + category
+    directory = 'data/' + category
     files_lst = []
     
     for dirpath , subdirs, files in os.walk(directory):
@@ -30,13 +30,13 @@ def split_data(category):
     
     
     for file in X_train:
-        shutil.copy2(file, 'codeBERT/data_train_test_val/train/' + category)
+        shutil.copy2(file, 'data_train_test_val/train/' + category)
     
     for file in X_test:
-        shutil.copy2(file, 'codeBERT/data_train_test_val/test/' + category)  
+        shutil.copy2(file, 'data_train_test_val/test/' + category)  
         
     for file in X_valid:
-        shutil.copy2(file, 'codeBERT/data_train_test_val/val/' + category)  
+        shutil.copy2(file, 'data_train_test_val/val/' + category)  
         
         
 split_data('safe')

@@ -5,9 +5,10 @@ import random
 import numpy as np
 from tqdm import tqdm
 from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score
-from codeBERT.load_data import Load_Data
-from codeBERT.argument_parser import parse_arguments
-from codeBERT.model import RobertaClass
+from sklearn.metrics import classification_report
+from load_data import Load_Data
+from argument_parser import parse_arguments
+from model import RobertaClass
 from transformers import get_linear_schedule_with_warmup
 
 
@@ -52,13 +53,16 @@ def train(opt):
     training_stats = []
     
     #Path to save the best model
-    output_dir = 'best/'
+    model_dir = 'best/codeBERT_pl.bin'
     best_loss = 10000
     # For each epoch...
     for epoch_i in range(0, opt.epochs):
         print("")
         print('======== Epoch {:} / {:} ========'.format(epoch_i + 1, opt.epochs))
         print('Training...')
+        
+        model_to_save = model
+        torch.save(model_to_save, model_dir)
         
         model.train()
         
@@ -100,27 +104,31 @@ def train(opt):
             # Update the learning rate.
             scheduler.step()
             
-            if step%opt.statistic_step==0:
+            if step%opt.statistic_step==0 and step!=0:
                  loss_step = total_train_loss/step
                  train_accuracy = accuracy_score(n_labels, n_predict).item()
                  train_precision = precision_score(n_labels, n_predict, average='micro').item()
                  train_recall= recall_score(n_labels, n_predict, average='micro').item()
                  train_f1 = f1_score(n_labels, n_predict, average='micro').item()
                  print('Train loss per %d steps:%0.3f'%(step,loss_step))
-                 print('Train accuracy per %d steps:%0.1f'%(step, train_accuracy))
-                 print('Train micro precision per %d steps:%0.1f'%(step,train_precision))
-                 print('Train micro recall per %d steps:%0.1f'%(step,train_recall))
-                 print('Train micro f1 score per %d steps:%0.1f'%(step,train_f1))
+                 print(classification_report(n_labels, n_predict, target_names=['safe','unsafe']))
+                 #print('Train accuracy per %d steps:%0.2f'%(step, train_accuracy))
+                 #print('Train micro precision per %d steps:%0.2f'%(step,train_precision))
+                 #print('Train micro recall per %d steps:%0.2f'%(step,train_recall))
+                 #print('Train micro f1 score per %d steps:%0.2f'%(step,train_f1))
                  
                  
                  
                  
-            
+        print("")
+        print('Training resuts')    
         # Calculate the average loss over all of the batches.
         avg_train_loss = total_train_loss / len(train_data) 
-        print("")
         print("  Average training loss: {0:.2f}".format(avg_train_loss))
-            
+        print(classification_report(n_labels, n_predict, target_names=['safe','unsafe']))
+                     
+        
+        
         print("")
         print("Running Validation...")
         
@@ -150,7 +158,7 @@ def train(opt):
                 # Accumulate the validation loss.
                 total_eval_loss += loss.item()  
                 
-                if step%opt.statistic_step==0:
+                if step%opt.statistic_step==0 and step!=0:
                     loss_step = total_eval_loss/step
                     val_accuracy = accuracy_score(n_labels, n_predict).item()
                     val_precision = precision_score(n_labels, n_predict, average='micro').item()
@@ -158,18 +166,22 @@ def train(opt):
                     val_f1 = f1_score(n_labels, n_predict, average='micro').item()
                  
                     print('Train loss per %d steps:%0.3f'%(step,loss_step))
-                    print('Train accuracy per %d steps:%0.1f'%(step,val_accuracy))
-                    print('Train micro precision per %d steps:%0.1f'%(step,val_precision))
-                    print('Train micro recall per %d steps:%0.1f'%(step,val_recall))
-                    print('Train micro f1 score per %d steps:%0.1f'%(step,val_f1))
+                    print(classification_report(n_labels, n_predict, target_names=['safe','unsafe']))
+                 
+                    #print('Train accuracy per %d steps:%0.2f'%(step,val_accuracy))
+                    #print('Train micro precision per %d steps:%0.2f'%(step,val_precision))
+                    #print('Train micro recall per %d steps:%0.2f'%(step,val_recall))
+                    #print('Train micro f1 score per %d steps:%0.2f'%(step,val_f1))
         
         # Report the final accuracy for this validation run.
         print("")
         print('Validation resuts')
-        print('Train accuracy per %d steps:%0.1f'%(step,accuracy_score(n_labels, n_predict).item()))
-        print('Train micro precision per %d steps:%0.1f'%(step,precision_score(n_labels, n_predict, average='micro').item()))
-        print('Train micro recall per %d steps:%0.1f'%(step,recall_score(n_labels, n_predict, average='micro').item()))
-        print('Train micro f1 score per %d steps:%0.1f'%(step,f1_score(n_labels, n_predict, average='micro').item()))
+        print(classification_report(n_labels, n_predict, target_names=['safe','unsafe']))
+                 
+        #print('Train accuracy per %d steps:%0.1f'%(step,accuracy_score(n_labels, n_predict).item()))
+        #print('Train micro precision per %d steps:%0.1f'%(step,precision_score(n_labels, n_predict, average='micro').item()))
+        #print('Train micro recall per %d steps:%0.1f'%(step,recall_score(n_labels, n_predict, average='micro').item()))
+        #print('Train micro f1 score per %d steps:%0.1f'%(step,f1_score(n_labels, n_predict, average='micro').item()))
                  
         # Calculate the average loss over all of the batches.
         avg_val_loss = total_eval_loss / len(val_data) 
@@ -196,9 +208,9 @@ def train(opt):
         
         if avg_val_loss<best_loss:
             print('Found better model')
-            print("Saving model to %s" % output_dir)
+            print("Saving model to %s" % model_dir)
             model_to_save = model
-            torch.save(model_to_save, output_dir)
+            torch.save(model_to_save, model_dir)
     
     
     #Save statistics to a txt file
@@ -214,6 +226,7 @@ def train(opt):
 
 if __name__ == "__main__":
     opt = parse_arguments()
+    print(opt)
     os.environ['CUDA_VISIBLE_DEVICES'] = opt.cuda
     USE_CUDA = torch.cuda.is_available()
     device = torch.device("cuda" if USE_CUDA else "cpu")

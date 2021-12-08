@@ -23,6 +23,15 @@ This step will process the data and save input_ids, attention_masks, and labels 
 ## Runnig the model
 
 1. To fine-tune the model: 
-     - ```source fine-tuning-codeBERT.sh```
+     - ```python train.py```
 
 2. To test the model:
+    - ```python test.py```
+    
+## Results
+
+1. Performance on test subset:
+       
+![plot](test.png)
+
+0 = safe, 1= unsafe    

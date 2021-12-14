@@ -34,4 +34,18 @@ This step will process the data and save input_ids, attention_masks, and labels 
        
 ![plot](test.png)
 
-0 = safe, 1= unsafe    
+0 = safe, 1= unsafe
+
+#Inference
+
+1. Move to ```inference/``` folder
+     - ```cd inference```
+2. Upload the data on ```data/``` folder         
+ 
+3. To extract features run  
+    - ```python process_data```
+    
+4. Download the pre-trained model from ```s3://bertrust/codeBERT_pl.bin``` and upload it to ```model/``` forlder
+
+5. Run the inference script
+    - ```python infer.py```

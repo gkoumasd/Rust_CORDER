@@ -20,7 +20,7 @@
 
     - ```source extract_features.sh```
     - Note that the max sequnence length of code snippets equals 80 tokens.
-    - After rinning the script, input_ids, masks, and labels will be saved in ```data/``` folder.
+    - After running the script, input_ids, masks, and labels will be saved in ```data/``` folder.
     
     
 ### Training

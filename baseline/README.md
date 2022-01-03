@@ -23,7 +23,7 @@
     - After rinning the script, input_ids, masks, and labels will be saved in ```data/``` folder.
     
     
-### train
+### Training
 
 4. To train the CNN model run    
     - ```python train.py````

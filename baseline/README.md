@@ -26,7 +26,7 @@
 ### Training
 
 4. To train the CNN model run    
-    - ```python train.py````
+    - ```python train.py```
 
 
 

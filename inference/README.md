@@ -1,4 +1,4 @@
-# Inference using TBCNN
+# Inferencing using Corder [SIGIR'21]
 
 Tell whether Rust program files are unsafe or not. 
 

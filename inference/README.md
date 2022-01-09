@@ -10,7 +10,7 @@ Tell whether Rust program files are unsafe or not.
 
 ## Example
 
-The following commands test whether the functiosn in anyhow are unsafe:
+The following commands test whether the functions in the `anyhow` crate are unsafe:
 
 ```bash
 ./inference.sh ../data/safe/anyhow/*.rs

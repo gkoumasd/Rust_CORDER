@@ -12,6 +12,8 @@ from util import identifier_splitting
 from util.data.data_loader.token_vocab_extractor import TokenVocabExtractor
 from nltk.stem import PorterStemmer
 from statistics import mean, stdev, median
+import subprocess
+import json
 
 class TreeSitterRustDataProcessor(DataProcessor):
     def __init__(self, node_type_vocab_path, node_token_vocab_path, data_path, output_path, parser):
@@ -21,33 +23,45 @@ class TreeSitterRustDataProcessor(DataProcessor):
         super().__init__(node_type_vocab_path, node_token_vocab_path, data_path, output_path, parser)
         
     def load_program_data(self, files):
-        
         trees = []
         sizes = []
         count_processed_files = 0
+        cmd = ["tree-grepper", "--query", "rust", "(function_item)", "-f", "json"] + [f.name for f in files]
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        (out, err) = proc.communicate()
+        files = json.loads(out)
         for file in files:
-         if file.name.endswith(".rs"):
            try:
                 count_processed_files += 1
-                code_snippet = file.read()
-                code_snippet = bytes(code_snippet, 'utf-8')
+                # code_snippt = file.read()
+                matches = file['matches']
+                for i in trange(0, len(matches)):
+                   is_unsafe = "safe"
+                   code = matches[i]
+                   code_snippet = code['text']
+                   code_snippet2 = re.sub('unsafe fn ', '', code_snippet)                   
+                   if code_snippet2 != code_snippet:
+                      is_unsafe = "unsafe"
+                      code_snippet = code_snippet2 
+                   # remove unsafe blocks
+                   code_snippet = re.sub('unsafe ', '', code_snippet)                   
+                   code_snippet = bytes(code_snippet, 'utf-8')
+                   #Createa AST representation
+                   ast = self.ast_parser.parse(code_snippet)
                
-                #Createa AST representation
-                ast = self.ast_parser.parse(code_snippet)
-               
-                #Simplify AST to a nested dictionary
-                tree, sub_tokens, size  = self.simplify_ast(ast, code_snippet)
+                   #Simplify AST to a nested dictionary
+                   tree, sub_tokens, size  = self.simplify_ast(ast, code_snippet)
                 
-                tree_data = {
+                   tree_data = {
                         "tree": tree,
                         "size": size,
                         "sub_tokens": sub_tokens,
-                        "file_path": file.name
-                }
-                trees.append(tree_data) 
-                sizes.append(size)
+                        "file_path": file['file'] + ":" + str(code['start']['row']) + ":" + is_unsafe
+                   }
+                   trees.append(tree_data) 
+                   sizes.append(size)
            except Exception as e:
-                print(e, 'what??')    
+                   print(e, 'what??')    
         # print("Total processed files : " + str(count_processed_files))
         return trees
             

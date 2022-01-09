@@ -32,7 +32,6 @@ tf.compat.v1.disable_eager_execution()
 tf.disable_v2_behavior()
 
 def main(test_opt):
-    test_opt.model_path = os.path.join(test_opt.model_path, 'rust_classification_task')
     checkfile = os.path.join(test_opt.model_path, 'cnn_tree.ckpt')
     ckpt = tf.train.get_checkpoint_state(test_opt.model_path)
     # print("The model path : " + str(checkfile))
@@ -40,7 +39,7 @@ def main(test_opt):
         print('Failed to upload the pretrained model')   
     tbcnn_model = TBCNN(test_opt)
     tbcnn_model.feed_forward()
-    test_data_loader = BaseDataLoader(test_opt.batch_size, test_opt.label_size, test_opt.tree_size_threshold_upper, test_opt.tree_size_threshold_lower, test_opt.test_path, False)
+    test_data_loader = BaseDataLoader(test_opt.batch_size, test_opt.tree_size_threshold_upper, test_opt.tree_size_threshold_lower, test_opt.test_path, False)
 
     saver = tf.train.Saver(save_relative_paths=True, max_to_keep=5)  
     init = tf.global_variables_initializer()
@@ -49,8 +48,6 @@ def main(test_opt):
         if ckpt and ckpt.model_checkpoint_path:
             # print("Checkpoint path : " + str(ckpt.model_checkpoint_path))
             saver.restore(sess, ckpt.model_checkpoint_path)
-        correct_labels = []
-        predictions = []
         test_batch_iterator = ThreadedIterator(test_data_loader.make_minibatch_iterator(), max_queue_size=test_opt.worker)
         for test_step, test_batch_data in enumerate(test_batch_iterator):
             scores = sess.run(
@@ -65,15 +62,15 @@ def main(test_opt):
                     }
                 )
 
-            file = test_batch_data['batch_files']
+            files = test_batch_data['batch_files']
             batch_predictions = list(np.argmax(scores[0],axis=1))
             confidence = np.amax(scores[0],axis=1)[0]
             if batch_predictions[0]==0:
-                print('%s: Safe (%.3f).'%(file[0],confidence))
+                   print('%s: Safe (%.3f).'%(files[0],confidence))
             elif batch_predictions[0]==1:
-                print('%s: Unsafe (%.3f).'%(file[0],confidence))
+                   print('%s: Unsafe (%.3f).'%(files[0],confidence))
             else:
-                print('Uknown category')
+                   print('Uknown category')
 if __name__ == "__main__":
     test_opt = argument_parser.parse_arguments()
     os.environ['CUDA_VISIBLE_DEVICES'] = test_opt.cuda

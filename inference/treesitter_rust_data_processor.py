@@ -1,6 +1,5 @@
 import sys
 from pathlib import Path
-# To import upper level modules
 sys.path.append(str(Path('..').absolute().parent))
 
 from base_data_processor import DataProcessor
@@ -15,71 +14,41 @@ from nltk.stem import PorterStemmer
 from statistics import mean, stdev, median
 
 class TreeSitterRustDataProcessor(DataProcessor):
-    def __init__(self, node_type_vocab_path, node_token_vocab_path, data_path, parser):
+    def __init__(self, node_type_vocab_path, node_token_vocab_path, data_path, output_path, parser):
         self.ast_parser = ASTParser(language='rust')
         self.token_vocab = TokenVocabExtractor(data_path,node_token_vocab_path)
         self.stemer = PorterStemmer()
-        super().__init__(node_type_vocab_path, node_token_vocab_path, data_path, parser)
+        super().__init__(node_type_vocab_path, node_token_vocab_path, data_path, output_path, parser)
         
-        
-    def load_program_data(self, directory):
+    def load_program_data(self, files):
         
         trees = []
         sizes = []
         count_processed_files = 0
-        
-        for subdir , dirs, files in os.walk(directory): 
-            for file in tqdm(files):
-                if file.endswith(".rs"):
-                    #print(file)
-                    try:
-                        file_path = os.path.join(subdir,file)
-                        file_path = file_path.replace('\\','/') #Windows version
-                        
-                        #Extract the classification label.
-                        file_path_splits = file_path.split("/")
-                        #label = 'unknown'
-                        #print('Label:',file_path_splits[-2])
-                        if (file_path_splits[-2]=='safe'):
-                            label = 0
-                        else:
-                            label = 1
-                            
-                            
-                        count_processed_files += 1
-                        
-                        with open(file_path, "rb") as f:
-                            code_snippet = f.read()
-                        
-                        #Remove non alpharithmetic characters from code snippet
-                        code_snippet = re.sub(r'\W+', ' ', code_snippet.decode('utf-8')) 
-                        code_snippet = bytes(code_snippet, 'utf-8')
-                       
-                        
-                        #Createa AST representation
-                        ast = self.ast_parser.parse(code_snippet)
-                       
-                        #Simplify AST to a nested dictionary
-                        tree, sub_tokens, size  = self.simplify_ast(ast, code_snippet)
-                        
-                        tree_data = {
-                                "tree": tree,
-                                "size": size,
-                                "label": label,
-                                "sub_tokens": sub_tokens,
-                                "file_path": file_path
-                            }
-                        
-                        trees.append(tree_data) 
-                        sizes.append(size)
-                        
-                    except Exception as e:
-                        print(e, 'what??')    
-                        
-        print("Total processed files : " + str(count_processed_files))
-        
-       
-       
+        for file in files:
+         if file.name.endswith(".rs"):
+           try:
+                count_processed_files += 1
+                code_snippet = file.read()
+                code_snippet = bytes(code_snippet, 'utf-8')
+               
+                #Createa AST representation
+                ast = self.ast_parser.parse(code_snippet)
+               
+                #Simplify AST to a nested dictionary
+                tree, sub_tokens, size  = self.simplify_ast(ast, code_snippet)
+                
+                tree_data = {
+                        "tree": tree,
+                        "size": size,
+                        "sub_tokens": sub_tokens,
+                        "file_path": file.name
+                }
+                trees.append(tree_data) 
+                sizes.append(size)
+           except Exception as e:
+                print(e, 'what??')    
+        # print("Total processed files : " + str(count_processed_files))
         return trees
             
     def simplify_ast(self, tree, text): #tree-> ast, text->code_snippet

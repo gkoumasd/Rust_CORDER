@@ -10,7 +10,7 @@ class BaseDataLoader():
         self.is_training = is_training
         self.buckets = pickle.load(open(data_path, "rb" ))
         self.batch_size = batch_size
-        self.label_size = label_size
+        # self.label_size = label_size
         self.tree_size_threshold_upper = tree_size_threshold_upper
         self.tree_size_threshold_lower = tree_size_threshold_lower
         # self.make_minibatch_iterator()
@@ -31,9 +31,9 @@ class BaseDataLoader():
         batch_children_node_sub_tokens_id = []
         batch_children_node_token = []
 
-        batch_labels = []
+        # batch_labels = []
         batch_files = []
-        batch_labels_one_hot = []
+        # batch_labels_one_hot = []
         batch_size = []
 
         for tree_data in batch_data:
@@ -47,10 +47,9 @@ class BaseDataLoader():
             batch_children_node_type_id.append(tree_data["children_node_type_id"])
             batch_children_node_sub_tokens_id.append(tree_data["children_node_sub_tokens_id"])
             batch_children_node_token.append(tree_data["children_node_token"])
-
-            batch_labels.append(tree_data["label"])
+            # batch_labels.append(tree_data["label"])
             batch_files.append(tree_data["file_path"])
-            batch_labels_one_hot.append(self._onehot(tree_data["label"], self.label_size))
+            # batch_labels_one_hot.append(self._onehot(tree_data["label"], self.label_size))
 
             batch_size.append(tree_data["size"])
         
@@ -74,9 +73,9 @@ class BaseDataLoader():
             "batch_children_index": batch_children_index,
             "batch_children_node_type_id": batch_children_node_type_id,
             "batch_children_node_sub_tokens_id": batch_children_node_sub_tokens_id,
-            "batch_labels": batch_labels,
+            # "batch_labels": batch_labels,
             "batch_files": batch_files,
-            "batch_labels_one_hot": batch_labels_one_hot,
+            # "batch_labels_one_hot": batch_labels_one_hot,
             "batch_size": batch_size
         }
         return batch_obj

@@ -18,11 +18,12 @@ excluded_tokens = [",","{",";","}",")","(",'"',"'","`",""," ","[]","[","]","/","
 
 class DataProcessor():
    
-    def __init__(self, node_type_vocab_path, node_token_vocab_path, data_path, parser):
+    def __init__(self, node_type_vocab_path, node_token_vocab_path, data_path, output_path, parser):
         
         self.node_type_vocab_path = node_type_vocab_path
         self.node_token_vocab_path = node_token_vocab_path
         self.data_path = data_path
+        self.output_path = output_path
             
         self.node_token_lookup = self.load_node_token_vocab(self.node_token_vocab_path)
 
@@ -31,35 +32,14 @@ class DataProcessor():
         else:
              print ('Create', self.node_type_vocab_path)
 
-        base_name =os.path.basename(data_path)
-        
-        self.simple_tree_pkl_name = os.path.basename(os.path.dirname(data_path))
-        self.buckets_name = os.path.basename(os.path.dirname(data_path))
-
-        base_path = str(os.path.dirname(data_path))
-        self.simple_tree_pkl_path = "%s/%s-%s-%s.pkl" % (base_path, parser, "trees", base_name)
-        self.buckets_name_path = "%s/%s-%s-%s.pkl" % (base_path, parser, "buckets", base_name)
-
         self.bucket_sizes = np.array(list(range(30 , 7500 , 10)))
         self.buckets = defaultdict(list)
-
-
-        if os.path.exists(self.simple_tree_pkl_path):
-            os.remove(self.simple_tree_pkl_path)
-            
         self.trees = self.load_program_data(self.data_path)
-        pickle.dump(self.trees, open(self.simple_tree_pkl_path, "wb" ) )
-
-        #print("Convert trees into training indices....")
-        if os.path.exists(self.buckets_name_path):
-            os.remove(self.buckets_name_path)
-      
+        if os.path.exists(self.output_path):
+            os.remove(self.output_path)
         self.convert_trees_into_training_indices(self.trees)
-        pickle.dump(self.buckets, open(self.buckets_name_path, "wb" ) )
+        pickle.dump(self.buckets, open(self.output_path, "wb" ) )
             
-    
-            
-    
     def load_node_token_vocab(self, node_token_vocab_path):
         node_token_lookup = {}
         with open(node_token_vocab_path, "r", encoding='utf-8') as f:
@@ -147,9 +127,8 @@ class DataProcessor():
 
     def extract_training_data(self, tree_data):
         
-        tree, label, sub_tokens, size, file_path = tree_data["tree"], tree_data["label"], tree_data["sub_tokens"] , tree_data["size"], tree_data["file_path"]
-        print("Extracting............", file_path)
-        # print(tree)
+        tree, sub_tokens, size, file_path = tree_data["tree"], tree_data["sub_tokens"] , tree_data["size"], tree_data["file_path"]
+        # print("Extracting............", file_path)
         node_type_id = []
         node_token = []
         node_sub_tokens_id = []
@@ -159,9 +138,7 @@ class DataProcessor():
         children_node_type_id = []
         children_node_token = []
         children_node_sub_tokens_id = []
-        # label = 0
 
-        # print("Label : " + str(label))
         queue = [(tree, -1)]
         # print queue
         while queue:
@@ -203,7 +180,6 @@ class DataProcessor():
         results["children_node_token"] = children_node_token
         results["children_node_sub_tokens_id"] = children_node_sub_tokens_id
         results["size"] = size
-        results["label"] = label
         results["file_path"] = file_path
 
         return results

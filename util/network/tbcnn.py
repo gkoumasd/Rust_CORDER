@@ -43,14 +43,14 @@ class TBCNN(BaseLayer):
             self.weights["w_attention"] = tf.Variable(tf.compat.v1.keras.initializers.VarianceScaling(scale=1.0, mode="fan_avg", distribution="uniform")([self.node_dim, 1]), name="w_attention")
             
             if self.node_init == 0:
-                print("Using only type weights..........")
+                # print("Using only type weights..........")
                 self.weights["node_type_embedding"] = tf.Variable(tf.compat.v1.keras.initializers.VarianceScaling(scale=1.0, mode="fan_avg", distribution="uniform")([len(self.node_type_lookup.keys()), self.node_type_dim]), name='node_type_embedding')
             else:
                 if self.node_init == 1:
-                    print("Using only token weights..........")            
+                    # print("Using only token weights..........")            
                     self.weights["node_token_embedding"] = tf.Variable(tf.compat.v1.keras.initializers.VarianceScaling(scale=1.0, mode="fan_avg", distribution="uniform")([len(self.node_token_lookup.keys()), self.node_token_dim]), name='node_token_embedding')
                 else:
-                    print("Using both type and token weights..........") 
+                    # print("Using both type and token weights..........") 
                     self.weights["node_token_embedding"] = tf.Variable(tf.compat.v1.keras.initializers.VarianceScaling(scale=1.0, mode="fan_avg", distribution="uniform")([len(self.node_token_lookup.keys()), self.node_token_dim]), name='node_token_embedding')
                     self.weights["node_type_embedding"] = tf.Variable(tf.compat.v1.keras.initializers.VarianceScaling(scale=1.0, mode="fan_avg", distribution="uniform")([len(self.node_type_lookup.keys()), self.node_type_dim]), name='node_type_embedding')
     
@@ -72,7 +72,7 @@ class TBCNN(BaseLayer):
 
     def convolve_tree_based_cnn(self):
         if self.node_init == 0:
-            print("Including only type information..........")
+            # print("Including only type information..........")
             # shape = (batch_size, max_tree_size, node_type_dim)
             # Example with batch size = 12: shape = (12, 48, 30)
             self.parent_node_type_embedding = self.compute_parent_node_types_tensor(self.placeholders["node_type"], self.weights["node_type_embedding"])
@@ -83,7 +83,7 @@ class TBCNN(BaseLayer):
             self.children_embedding = self.children_node_type_embedding
         else:
             if self.node_init == 1:
-                print("Including only token information..........")
+                # print("Including only token information..........")
                 self.parent_node_token_embedding = self.compute_parent_node_tokens_tensor(self.placeholders["node_token"], self.weights["node_token_embedding"])
                 self.children_node_token_embedding = self.compute_children_node_tokens_tensor(self.placeholders["children_node_token"], self.node_token_dim, self.weights["node_token_embedding"])
                 # Example with batch size = 12: shape = (12, 48, (30 + 50))) = (12, 48, 80)
@@ -91,7 +91,7 @@ class TBCNN(BaseLayer):
                 self.children_embedding = self.children_node_token_embedding
 
             else:
-                print("Including both type and token information..........")
+                # print("Including both type and token information..........")
 
                 self.parent_node_type_embedding = self.compute_parent_node_types_tensor(self.placeholders["node_type"], self.weights["node_type_embedding"])
                 # shape = (batch_size, max_tree_size, max_children, node_type_dim)

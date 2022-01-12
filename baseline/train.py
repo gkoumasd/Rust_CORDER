@@ -96,6 +96,12 @@ def train(opt, token_voc = 'vocab/voc.txt'):
             loss = loss_function(outputs.squeeze(dim=-1), labels.float())
             total_train_loss += loss.item()  
             
+            # PREDICTIONS 
+            pred = torch.round(outputs.squeeze(dim=-1)).int()
+            n_predict.extend(pred.tolist())
+            n_labels.extend(labels.tolist())
+            total_train_acc += accuracy_score(n_labels,n_predict)
+            
             # Perform a backward pass to calculate the gradients.
             loss.backward()
             
@@ -106,12 +112,7 @@ def train(opt, token_voc = 'vocab/voc.txt'):
             # Update parameters
             optimizer.step()
             
-            # PREDICTIONS 
-            pred = np.round(outputs.detach())
-            labels = np.round(labels.float().detach())             
-            n_predict.extend(pred.tolist())
-            n_labels.extend(labels.tolist())
-            total_train_acc += accuracy_score(n_labels,n_predict)
+            
             
             if step%opt.statistic_step==0 and step!=0:
                 loss_step = total_train_loss/step
@@ -158,8 +159,7 @@ def train(opt, token_voc = 'vocab/voc.txt'):
                 loss = loss_function(outputs.squeeze(dim=-1), labels.float())
                 
                 # PREDICTIONS 
-                pred = np.round(outputs.detach())
-                labels = np.round(labels.float().detach())             
+                pred = torch.round(outputs.squeeze(dim=-1)).int()
                 n_predict.extend(pred.tolist())
                 n_labels.extend(labels.tolist())
                 total_eval_acc += accuracy_score(n_labels,n_predict)
@@ -167,10 +167,10 @@ def train(opt, token_voc = 'vocab/voc.txt'):
                 
                 if step%opt.statistic_step==0 and step!=0:
                     loss_step = total_eval_loss/step
-                    acc_ste = total_eval_acc/step
+                    acc_step = total_eval_acc/step
                     print('Val loss per %d steps:%0.3f'%(step,loss_step))
                     print('Val acc per %d steps:%0.3f'%(step,acc_step))
-                    print(classification_report(n_labels, n_predict, target_names=['Non-sequential','Sequential'], zero_division=0))
+                    print(classification_report(n_labels, n_predict, target_names=['Safe','Unsafe'], zero_division=0))
         
         print("")
         print('Val resuts')        
@@ -179,7 +179,7 @@ def train(opt, token_voc = 'vocab/voc.txt'):
         avg_val_acc = total_eval_acc / len(val_data)
         print("  Average val loss: {0:.2f}".format(avg_val_loss))
         print("  Average val acc: {0:.2f}".format(avg_val_acc))
-        print(classification_report(n_labels, n_predict, target_names=['Non-sequential','Sequential'], zero_division=0))        
+        print(classification_report(n_labels, n_predict, target_names=['Safe','Unsafe'], zero_division=0))        
         
         # Record all statistics from this epoch.
         training_stats.append({
@@ -216,3 +216,5 @@ if __name__ == "__main__":
     opt = parse_arguments()
     print(opt)
     USE_CUDA = torch.cuda.is_available()
+    
+    train(opt)

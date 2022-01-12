@@ -13,7 +13,8 @@ class CNNClassifier(nn.ModuleList):
       self.filter_sizes=[2, 3, 4, 5]
       self.num_classes = 1
       
-      self.embedding = nn.Embedding(num_embeddings=vocab_size,
+      #contains a “+1” this because we are considering the index that refers to the padding, in this case it is the index 0.
+      self.embedding = nn.Embedding(num_embeddings=vocab_size+1,
                                           embedding_dim=self.embed_dim,
                                           padding_idx=0)    
       

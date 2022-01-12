@@ -27,6 +27,19 @@
 
 4. To train the CNN model run    
     - ```python train.py```
+    
+    
+### Testing
+
+4. To test the CNN model run    
+    - ```python test.py``` 
+    
+### Results
+
+
+1. Performance on test subset:
+       
+![plot](test.png)       
 
 
 

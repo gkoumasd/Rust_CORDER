@@ -33,7 +33,18 @@ def train(opt):
     
     #Load the model
     model = RobertaClass()
-    model.to(device)
+    if torch.cuda.device_count() > 1:
+        print('You use %d GPUs'%torch.cuda.device_count())
+        model = nn.DataParallel(model, device_ids=[0,1])
+        torch.cuda.set_device(int(opt.cuda))
+        model.cuda(int(opt.cuda))
+        loss_function = nn.CrossEntropyLoss().cuda(int(opt.cuda))
+    else:
+        print('You use only one device')  
+        device = torch.device("cuda" if USE_CUDA else "cpu")
+        model.to(device)    
+        loss_function = nn.CrossEntropyLoss()
+    
     print('CodeBERT has {:} different named parameters.\n'.format(len(list(model.named_parameters()))))
 
     optimizer = torch.optim.Adam(params=model.parameters(), lr=opt.learning_rate)
@@ -47,7 +58,7 @@ def train(opt):
                 num_warmup_steps = 0, # Default value in run_glue.py
                 num_training_steps = total_steps)
     
-    loss_function = nn.CrossEntropyLoss()
+    
     
     # We'll store a number of quantities such as training and validation loss etc
     training_stats = []
@@ -74,11 +85,17 @@ def train(opt):
         for step, data in tqdm(enumerate(train_data)):
             
             #Load data
-            input_ids = data[0].to(device)
-            attention_masks  = data[1].to(device)
-            token_type_ids = data[2].to(device)
-            labels = data[3].to(device)
-            
+            if torch.cuda.device_count() > 1:
+                input_ids = data[0].cuda(non_blocking=True)
+                attention_masks  = data[1].cuda(non_blocking=True)
+                token_type_ids = data[2].cuda(non_blocking=True)
+                labels = data[3].cuda(non_blocking=True)
+            else:    
+                input_ids = data[0].to(device)
+                attention_masks  = data[1].to(device)
+                token_type_ids = data[2].to(device)
+                labels = data[3].to(device)
+                
             # Zero gradients
             optimizer.zero_grad()
             
@@ -140,10 +157,16 @@ def train(opt):
         # Evaluate data for one epoch
         for step, data in tqdm(enumerate(val_data)):
             #Load data
-            input_ids = data[0].to(device)
-            attention_masks  = data[1].to(device)
-            token_type_ids = data[2].to(device)
-            labels = data[3].to(device)
+            if torch.cuda.device_count() > 1:
+                input_ids = data[0].cuda(non_blocking=True)
+                attention_masks  = data[1].cuda(non_blocking=True)
+                token_type_ids = data[2].cuda(non_blocking=True)
+                labels = data[3].cuda(non_blocking=True)
+            else:    
+                input_ids = data[0].to(device)
+                attention_masks  = data[1].to(device)
+                token_type_ids = data[2].to(device)
+                labels = data[3].to(device)
             
             with torch.no_grad():   
                 #Calculate loss
@@ -230,6 +253,6 @@ if __name__ == "__main__":
     os.environ['CUDA_VISIBLE_DEVICES'] = opt.cuda
     USE_CUDA = torch.cuda.is_available()
     print(USE_CUDA)
-    device = torch.device("cuda" if USE_CUDA else "cpu")
+    #device = torch.device("cuda" if USE_CUDA else "cpu")
     
     train(opt)

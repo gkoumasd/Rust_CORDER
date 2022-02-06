@@ -7,12 +7,12 @@ import shutil
 
 def split_data(category):
 
-    directory = 'data/' + category
+    directory = 'data_ase/' + category
     files_lst = []
     
     for dirpath , subdirs, files in os.walk(directory):
         for file in tqdm(files):
-            if file.endswith(".rs"):
+            if file.endswith(".asm"):
                 files_lst.append(os.path.join(dirpath, file))
     
     

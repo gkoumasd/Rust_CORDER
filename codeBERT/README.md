@@ -16,7 +16,10 @@ After these steps, you can see the data in the treesitter_rust_train_test_val fo
 3. Preprocess the data
 
     
-    - ```source process_data.sh```
+    - ```source process_data_rs.sh``` tp process high-level program language, i.e., code snippets in rust
+    - ```source process_data_asm.sh``` tp process low-level program language, i.e., assemply
+    
+    
 
 This step will process the data and save input_ids, attention_masks, and labels to pickle files for the train, val, and test subdatasets.
 

@@ -7,10 +7,11 @@ from torch.utils.data import TensorDataset
 
 
 class Tokenizer():
-     def __init__(self, data_path: str, flag: str):
+     def __init__(self, data_path: str, flag: str, file_type='rs'):
          self.tokenizer = RobertaTokenizer.from_pretrained("microsoft/codebert-base")
          self.data_path = data_path
          self.flag = flag
+         self.file_type = '.' + file_type
          
      def tokenize(self):
          
@@ -19,14 +20,17 @@ class Tokenizer():
           attention_masks = []
           labels = []
           token_type_ids = []
+          print('\n Mode:'+ self.file_type+ '\n')
           for subdir , dirs, files in os.walk(self.data_path):
               for file in tqdm(files):
-                  file_path = os.path.join(subdir, file)
-                  if file.endswith(".rs"):
+                  if file.endswith(self.file_type):
+                      file_path = os.path.join(subdir, file)
                       #print(file_path)
                       
                       with open(file_path, "r", errors='ignore') as f:
                             code_snippet = str(f.read())
+                            
+                      
                             
                       label = file_path.replace('\\','/').split("/")[2]
                       if label == 'safe':
@@ -37,13 +41,22 @@ class Tokenizer():
                         
                       nl = ''
                       code = ''
-                      for line in code_snippet.split('\n'):
-                          if line.startswith('#'): #it's directive
-                              nl +=line
-                              nl +=' '
-                          else: #it#s code   
-                               code += line
-                               
+                      if self.file_type=='.rs': #works on high-level language
+                          for line in code_snippet.split('\n'):
+                              if line.startswith('#') or line.startswith('//'): #it's directive or comment
+                                  nl +=line
+                                  nl +=' '
+                              else: #it#s code   
+                                   code += line
+                      elif self.file_type=='.asm': #works on low-level language 
+                          #this version disrecard language information, i.e., comments
+                           for line in code_snippet.split('\n'):
+                               line = line.split('#')
+                               if len(line[0])>0 and '#' not in line[0]:
+                                   code += line[0] + ' '
+                               elif len(line)>1 and len(line[1])>0 and '#' not in line[1]: #When the comment followed by code
+                                   code += line[1] + ' '
+                           
                       
                             
                       encoded_dict = self.tokenizer.encode_plus(

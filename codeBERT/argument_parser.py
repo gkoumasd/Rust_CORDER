@@ -10,7 +10,7 @@ def parse_arguments():
      parser.add_argument('--model_path', default="best", help='path to save the model')
      parser.add_argument('--stop', type=int, default=20, help='early stop for training')
      
-     parser.add_argument('--batch_size', type=int, default=8, help='batch size')
+     parser.add_argument('--batch_size', type=int, default=32, help='batch size')
      parser.add_argument('--learning_rate', type=float, default=0.00001, help='learning rate')
      parser.add_argument('--statistic_step', type=int, default=100, help='show statistics per a number of steps')
      

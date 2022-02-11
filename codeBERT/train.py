@@ -64,7 +64,7 @@ def train(opt):
     training_stats = []
     
     #Path to save the best model
-    model_dir = 'best/codeBERT_pl.bin'
+    model_dir = 'best/codeBERT_asm32_pl.bin'
     best_loss = 10000
     # For each epoch...
     for epoch_i in range(0, opt.epochs):
@@ -199,6 +199,10 @@ def train(opt):
         # Report the final accuracy for this validation run.
         print("")
         print('Validation resuts')
+        val_accuracy = accuracy_score(n_labels, n_predict).item()
+        val_precision = precision_score(n_labels, n_predict, average='micro').item()
+        val_recall= recall_score(n_labels, n_predict, average='micro').item()
+        val_f1 = f1_score(n_labels, n_predict, average='micro').item()
         print(classification_report(n_labels, n_predict, target_names=['safe','unsafe']))
                  
         #print('Train accuracy per %d steps:%0.1f'%(step,accuracy_score(n_labels, n_predict).item()))
@@ -230,6 +234,7 @@ def train(opt):
         )
         
         if avg_val_loss<best_loss:
+            best_loss = avg_val_loss
             print('Found better model')
             print("Saving model to %s" % model_dir)
             model_to_save = model

@@ -12,6 +12,8 @@
 
 After these steps, you can see the data in the treesitter_rust_train_test_val folder, splitted into 3 subfolders train\test\val. 
 
+### The following step is optional in case you want to increase the amount of unsafe code snippets when you run experiments on the assebmply task.
+    ```source create_synthetic_data.sh```
 
 3. Preprocess the data
 

@@ -1,4 +1,5 @@
-PARSER=treesitter_rust
+#PARSER=treesitter_rs
+PARSER=treesitter_asm
 TRAIN_DATA_PATH=../${PARSER}_train_test_val/train
 TEST_DATA_PATH=../${PARSER}_train_test_val/test
 VAL_DATA_PATH=../${PARSER}_train_test_val/val

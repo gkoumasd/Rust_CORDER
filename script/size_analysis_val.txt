@@ -1,3 +1,3 @@
-In val subset, the mean size of trees is 74.8 (STD=116.30, Median:47.00). The max and min is  3984.0 and  4.0 
-Total processed files : 5378 
-Total files exceed upper threshold (1500): 4 
+In val subset, the mean size of trees is 3821.5 (STD=19104.29, Median:552.00). The max and min is  284466.0 and  3.0 
+Total processed files : 3092 
+Total files exceed upper threshold (1500): 1030 

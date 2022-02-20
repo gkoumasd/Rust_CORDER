@@ -35,34 +35,10 @@ class ASTParser():
         home = str(Path.home())
         cd = os.getcwd()
         
-        p = path.join(home, ".tree-sitter")
-        
-        if not path.exists(p):
-            os.makedirs(p, exist_ok=True)
-            zip_url = "https://github.com/yijunyu/tree-sitter-parsers/archive/refs/heads/main.zip"
-            parsers_target = os.path.join(p, "main.zip")
-            download_url(zip_url, parsers_target)
-            with zipfile.ZipFile(parsers_target, 'r') as zip_ref:
-          	        zip_ref.extractall(p)
-          	        shutil.move(path.join(p, "tree-sitter-parsers-main"), path.join(p, "bin"))
-          	        os.remove(parsers_target)
-        
-        p = path.join(p, "bin")
+        p = path.join(home, ".tree-sitter", "bin")
         os.chdir(p)   
+        print(p)
         
-        langs = []
-        for file in glob.glob("tree-sitter-*"):        
-            lang = file.split("-")[2]
-            if not "." in file.split("-")[3]: # c-sharp => c_sharp.so
-                lang = lang + "_" + file.split("-")[3]
-            langs.append(file)
-            Language.build_library(
-                # Store the library in the `build` directory
-                lang + '.so',
-                # Include one or more languages
-                langs
-            )
-            
         self.Languages = {}   
         
         for file in glob.glob("*.so"):

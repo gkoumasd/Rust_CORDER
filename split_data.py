@@ -5,14 +5,14 @@ from sklearn.model_selection import train_test_split
 import shutil
 
 
-def split_data(category):
+def split_data(ext, category):
 
     directory = 'data/' + category
     files_lst = []
     
     for dirpath , subdirs, files in os.walk(directory):
         for file in tqdm(files):
-            if file.endswith(".rs"):
+            if file.endswith('.' + ext):
                 files_lst.append(os.path.join(dirpath, file))
     
     
@@ -30,14 +30,16 @@ def split_data(category):
     
     
     for file in X_train:
-        shutil.copy2(file, 'treesitter_rust_train_test_val/train/' + category)
+        shutil.copy2(file, 'treesitter_' + ext + '_train_test_val/train/' + category)
     
     for file in X_test:
-        shutil.copy2(file, 'treesitter_rust_train_test_val/test/' + category)  
+        shutil.copy2(file, 'treesitter_' + ext + '_train_test_val/test/' + category)  
         
     for file in X_valid:
-        shutil.copy2(file, 'treesitter_rust_train_test_val/val/' + category)  
+        shutil.copy2(file, 'treesitter_' + ext + '_train_test_val/val/' + category)  
         
         
-split_data('safe')
-split_data('unsafe')        
+#split_data('rs', 'safe')
+#split_data('rs', 'unsafe')        
+split_data('asm', 'safe')
+split_data('asm', 'unsafe')        

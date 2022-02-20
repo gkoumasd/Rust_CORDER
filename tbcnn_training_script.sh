@@ -1,4 +1,5 @@
-PARSER=treesitter_rust
+#PARSER=treesitter_rust
+PARSER=treesitter_asm
 TRAIN_PATH=${PARSER}_train_test_val/${PARSER}-buckets-train.pkl
 TEST_PATH=${PARSER}_train_test_val/${PARSER}-buckets-val.pkl
 NODE_TYPE_VOCABULARY_PATH=vocab/${PARSER}/node_type/type.txt

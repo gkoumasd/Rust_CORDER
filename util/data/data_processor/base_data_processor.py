@@ -152,7 +152,7 @@ class DataProcessor():
 
 
     def extract_training_data(self, tree_data):
-        
+        # print(tree_data)
         tree, label, sub_tokens, size, file_path = tree_data["tree"], tree_data["label"], tree_data["sub_tokens"] , tree_data["size"], tree_data["file_path"]
         print("Extracting............", file_path)
         # print(tree)
@@ -173,31 +173,32 @@ class DataProcessor():
         while queue:
             # print "############"
             node, parent_ind = queue.pop(0)
-            # print node
-            # print parent_ind
-            node_ind = len(node_type_id)
-            # print "node ind : " + str(node_ind)
-            # add children and the parent index to the queue
-            queue.extend([(child, node_ind) for child in node['children']])
-            # create a list to store this node's children indices
-            children_index.append([])
-            children_node_type_id.append([])
-            children_node_token.append([])
-            children_node_sub_tokens_id.append([])
-            # add this child to its parent's child list
-            if parent_ind > -1:
-                children_index[parent_ind].append(node_ind)
-                children_node_type_id[parent_ind].append(int(node["node_type_id"]))
-                children_node_token[parent_ind].append(node["node_tokens"])
-                children_node_sub_tokens_id[parent_ind].append(node["node_tokens_id"])
-            # print("a")
-            # print(children_node_types)
-            # print("b")
-            # print(children_node_sub_tokens_id)
-            node_type_id.append(node['node_type_id'])
-            node_token.append(node['node_tokens'])
-            node_sub_tokens_id.append(node['node_tokens_id'])
-            node_index.append(node_ind)
+            if not node["node_type_id"] is None: 
+                # print(node["node_type_id"])
+                # print parent_ind
+                node_ind = len(node_type_id)
+                # print("node ind : " + str(node_ind))
+                # add children and the parent index to the queue
+                queue.extend([(child, node_ind) for child in node['children']])
+                # create a list to store this node's children indices
+                children_index.append([])
+                children_node_type_id.append([])
+                children_node_token.append([])
+                children_node_sub_tokens_id.append([])
+                # add this child to its parent's child list
+                if parent_ind > -1:
+                    children_index[parent_ind].append(node_ind)
+                    children_node_type_id[parent_ind].append(int(node["node_type_id"]))
+                    children_node_token[parent_ind].append(node["node_tokens"])
+                    children_node_sub_tokens_id[parent_ind].append(node["node_tokens_id"])
+                # print("a")
+                # print(children_node_types)
+                # print("b")
+                # print(children_node_sub_tokens_id)
+                node_type_id.append(node['node_type_id'])
+                node_token.append(node['node_tokens'])
+                node_sub_tokens_id.append(node['node_tokens_id'])
+                node_index.append(node_ind)
 
         results = {}
         results["node_index"] = node_index

@@ -9,6 +9,7 @@ from sklearn.metrics import classification_report
 from argument_parser import parse_arguments
 import pickle
 from model.cnn import CNNClassifier
+from model.bilstm import BiLSTMClassifier
 from data_loader import Load_Data
 from sklearn.metrics import accuracy_score
 
@@ -29,9 +30,12 @@ def test(opt, token_voc = 'vocab/voc.txt'):
         voc_size = index+1
         
         
-    model = CNNClassifier(voc_size)  
+    if opt.model == 'CNN':    
+        model = CNNClassifier(voc_size)
+    elif opt.model == 'BiLSTM': 
+        model = BiLSTMClassifier(voc_size)
     
-    if torch.cuda.device_count() > 1:
+    if torch.cuda.device_count() > 1 and opt.model == 'CNN':
         print('You use %d GPUs'%torch.cuda.device_count())
         model = nn.DataParallel(model, device_ids=[0,1])
         if os.path.exists(opt.model_path):
@@ -71,7 +75,7 @@ def test(opt, token_voc = 'vocab/voc.txt'):
     for step, data in tqdm(enumerate(test_data)):
         
         #Load data
-        if torch.cuda.device_count() > 1:
+        if torch.cuda.device_count() > 1 and opt.model == 'CNN':
             input_ids = data[0].cuda(non_blocking=True)
             #attention_masks  = data[1].cuda(non_blocking=True)
             labels = data[2].cuda(non_blocking=True)

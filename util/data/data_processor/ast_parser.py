@@ -35,7 +35,7 @@ class ASTParser():
         home = str(Path.home())
         cd = os.getcwd()
         
-        p = path.join(home, ".tree-sitter")
+        p = path.join(home, "tree-sitter")
         
         if not path.exists(p):
             os.makedirs(p, exist_ok=True)
@@ -51,17 +51,20 @@ class ASTParser():
         os.chdir(p)   
         
         langs = []
-        for file in glob.glob("tree-sitter-*"):        
-            lang = file.split("-")[2]
-            if not "." in file.split("-")[3]: # c-sharp => c_sharp.so
-                lang = lang + "_" + file.split("-")[3]
-            langs.append(file)
-            Language.build_library(
+        for file in glob.glob("tree-sitter-*"):    
+            if 'asm' in file or 'rust' in file:
+                print(file)
+                
+                lang = file.split("-")[2]
+                if not "." in file.split("-")[3]: # c-sharp => c_sharp.so
+                    lang = lang + "_" + file.split("-")[3]
+                langs.append(file)
+                Language.build_library(
                 # Store the library in the `build` directory
                 lang + '.so',
                 # Include one or more languages
                 langs
-            )
+                )
             
         self.Languages = {}   
         
@@ -70,7 +73,7 @@ class ASTParser():
             lang = os.path.splitext(file)[0]
             self.Languages[lang] = Language(path.join(p, file), lang)
           except:
-            print("An exception occurred to {}".format(lang))
+              print("An exception occurred to {}".format(lang))
             
         os.chdir(cd)   
         

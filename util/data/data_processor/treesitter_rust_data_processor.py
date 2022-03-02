@@ -10,11 +10,12 @@ from nltk.stem import PorterStemmer
 from statistics import mean, stdev, median
 
 class TreeSitterRustDataProcessor(DataProcessor):
-    def __init__(self, node_type_vocab_path, node_token_vocab_path, data_path, parser):
-        self.ast_parser = ASTParser(language='rust')
-        self.token_vocab = TokenVocabExtractor(data_path,node_token_vocab_path)
+    def __init__(self, node_type_vocab_path, node_token_vocab_path, data_path, parser, language):
+        self.ast_parser = ASTParser(language=language)
+        self.token_vocab = TokenVocabExtractor(data_path,node_token_vocab_path,language)
         self.stemer = PorterStemmer()
-        super().__init__(node_type_vocab_path, node_token_vocab_path, data_path, parser)
+        self.language = language
+        super().__init__(node_type_vocab_path, node_token_vocab_path, data_path, parser, language)
         
         
     def load_program_data(self, directory):
@@ -25,29 +26,52 @@ class TreeSitterRustDataProcessor(DataProcessor):
         
         for subdir , dirs, files in os.walk(directory): 
             for file in tqdm(files):
-                if file.endswith(".rs"):
-                    #print(file)
+                if file.endswith("."+self.language):
                     try:
                         file_path = os.path.join(subdir,file)
                         file_path = file_path.replace('\\','/') #Windows version
+                        print(file)
                         
                         #Extract the classification label.
                         file_path_splits = file_path.split("/")
-                        if (file_path_splits[-2]=='safe'):
+                        if file_path_splits[-2]=='safe':
                             label = 0
                         else:
                             label = 1
                             
                             
                         count_processed_files += 1
-                        
-                        with open(file_path, "rb") as f:
-                            code_snippet = f.read()
-                        
-                        #Remove non alpharithmetic characters from code snippet
-                        code_snippet = re.sub(r'\W+', ' ', code_snippet.decode('utf-8')) 
-                        code_snippet = bytes(code_snippet, 'utf-8')
                        
+                            
+                        with open(file_path, "r", errors='ignore') as f:
+                            code_snippet = str(f.read())
+                            
+                  
+                                      
+                        
+                        
+                        nl = ''
+                        code = ''
+                        if self.language=='rs': #works on high-level language
+                            for line in code_snippet.split('\n'):
+                                if line.startswith('#') or line.startswith('//'): #it's directive or comment
+                                    nl +=line
+                                    nl +=' '
+                                else: #it#s code   
+                                     code += line
+                        elif self.language=='asm': #works on low-level language 
+                            #this version disrecard language information, i.e., comments
+                             for line in code_snippet.split('\n'):
+                                 line = line.split('#')
+                                 if len(line[0])>0 and '#' not in line[0]:
+                                     code += line[0] + ' '
+                                 elif len(line)>1 and len(line[1])>0 and '#' not in line[1]: #When the comment followed by code
+                                     code += line[1] + ' '
+                                     
+                                     
+                        #code_snippet = re.sub(r'\W+', ' ', code.decode('utf-8'))
+                        #code_snippet = re.sub(r'\W+', ' ', code.decode('utf-8')) 
+                        code_snippet = bytes(code, 'utf-8')
                         
                         #Createa AST representation
                         ast = self.ast_parser.parse(code_snippet)
@@ -118,10 +142,11 @@ class TreeSitterRustDataProcessor(DataProcessor):
                 child_type = str(child.type)
                 
                 
+                
                 if child_type not in ignore_types:
                     queue.append(child)
                     child_type_id = self.node_type_lookup.get(child_type.upper())
-                    #print(child_type_id, child_type.upper() )
+                    #print(child_type.upper(), child_type_id, child_type.upper() )
                     
                     child_token = ""
                     child_sub_tokens_id = []
@@ -139,9 +164,9 @@ class TreeSitterRustDataProcessor(DataProcessor):
                         child_sub_tokens_id = [0 if child_sub_token_id is None else child_sub_token_id for child_sub_token_id in child_sub_tokens_id]
                         
                         #Check if index exceeds the max voc index 
-                        if (max(self.node_token_lookup.values()) + 1 in child_sub_tokens_id):
-                            print(child_sub_tokens, ':', child_sub_tokens_id)
-                            break
+                        #if (max(self.node_token_lookup.values()) + 1 in child_sub_tokens_id):
+                        #    print(child_sub_tokens, ':', child_sub_tokens_id)
+                            
                         
                         #print(child_sub_tokens_id, child_sub_tokens)
                         #child_sub_tokens = subtokens.split(' ')

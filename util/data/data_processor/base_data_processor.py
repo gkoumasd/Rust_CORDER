@@ -13,23 +13,23 @@ excluded_tokens = [",","{",";","}",")","(",'"',"'","`",""," ","[]","[","]","/","
 
 class DataProcessor():
    
-    def __init__(self, node_type_vocab_path, node_token_vocab_path, data_path, parser):
+    def __init__(self, node_type_vocab_path, node_token_vocab_path, data_path, parser, language):
         
         self.node_type_vocab_path = node_type_vocab_path
         self.node_token_vocab_path = node_token_vocab_path
         self.data_path = data_path
+        self.language = language
         
     
         #Load vocabs
         
         if '/train' in self.data_path: #Extract tokens for train data only
-            token_ext = TokenVocabExtractor(self.data_path, self.node_token_vocab_path)
+            token_ext = TokenVocabExtractor(self.data_path, self.node_token_vocab_path, self.language)
             token_ext.create_vocab_from_dir()
             
         self.node_token_lookup = self.load_node_token_vocab(self.node_token_vocab_path)
 
         if os.path.exists(self.node_type_vocab_path):
-             
              self.node_type_lookup = self.load_node_type_vocab(self.node_type_vocab_path)
         else:
              print ('Create', self.node_type_vocab_path)
@@ -55,13 +55,13 @@ class DataProcessor():
             self.trees = self.load_program_data(self.data_path)
             pickle.dump(self.trees, open(self.simple_tree_pkl_path, "wb" ) )
 
-        print("Convert trees into training indices....")
-        if os.path.exists(self.buckets_name_path):
-            print("Bucket data exsits. In case you want to re-process, delete the bucket files : ", self.buckets_name_path)
+        #print("Convert trees into training indices....")
+        #if os.path.exists(self.buckets_name_path):
+        #    print("Bucket data exsits. In case you want to re-process, delete the bucket files : ", self.buckets_name_path)
 
-        else:
-            self.convert_trees_into_training_indices(self.trees)
-            pickle.dump(self.buckets, open(self.buckets_name_path, "wb" ) )
+        #else:
+        #    self.convert_trees_into_training_indices(self.trees)
+        #    pickle.dump(self.buckets, open(self.buckets_name_path, "wb" ) )
             
     
             
@@ -173,7 +173,8 @@ class DataProcessor():
         while queue:
             # print "############"
             node, parent_ind = queue.pop(0)
-            # print node
+            print (node, parent_ind)
+            break
             # print parent_ind
             node_ind = len(node_type_id)
             # print "node ind : " + str(node_ind)

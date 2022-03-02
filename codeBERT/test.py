@@ -17,7 +17,7 @@ def test(opt):
     test_data = test_dataloader.loader()
     
     #Load the model
-    model = torch.load(os.path.join(opt.model_path,'codeBERT_pl.bin'))
+    model = torch.load(os.path.join(opt.model_path,'codeBERT_asm32_pl.bin'))
     model.to(device)
     
     print("")

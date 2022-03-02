@@ -9,6 +9,7 @@ from sklearn.metrics import classification_report
 from argument_parser import parse_arguments
 import pickle
 from model.cnn import CNNClassifier
+from model.bilstm import BiLSTMClassifier
 from data_loader import Load_Data
 from sklearn.metrics import accuracy_score
 
@@ -28,10 +29,13 @@ def train(opt, token_voc = 'vocab/voc.txt'):
     for index, token in enumerate(dict_file):
         voc_size = index+1
         
-    model = CNNClassifier(voc_size)    
-    if torch.cuda.device_count() > 1:
+    if opt.model == 'CNN':    
+        model = CNNClassifier(voc_size)
+    elif opt.model == 'BiLSTM': 
+        model = BiLSTMClassifier(voc_size)
+    if torch.cuda.device_count() > 1 and opt.model == 'CNN':
         print('You use %d GPUs'%torch.cuda.device_count())
-        model = nn.DataParallel(model, device_ids=[0,1])
+        model = nn.DataParallel(model, device_ids=[0])
         #Run the model on a specified GPU and run the operations to multiple GPUs
         torch.cuda.set_device(int(opt.cuda))
         model.cuda(int(opt.cuda))
@@ -77,7 +81,7 @@ def train(opt, token_voc = 'vocab/voc.txt'):
         for step, data in tqdm(enumerate(train_data)):
             
             #Load data
-            if torch.cuda.device_count() > 1:
+            if torch.cuda.device_count() > 1 and opt.model == 'CNN':
                 input_ids = data[0].cuda(non_blocking=True)
                 #attention_masks  = data[1].cuda(non_blocking=True)
                 labels = data[2].cuda(non_blocking=True)
@@ -85,6 +89,8 @@ def train(opt, token_voc = 'vocab/voc.txt'):
                 input_ids = data[0].to(device)
                 #attention_masks  = data[1].to(device)
                 labels = data[2].to(device)
+                
+                
                 
                 
                 
@@ -144,7 +150,7 @@ def train(opt, token_voc = 'vocab/voc.txt'):
         # Evaluate data for one epoch
         for step, data in tqdm(enumerate(val_data)):
             #Load data
-            if torch.cuda.device_count() > 1:
+            if torch.cuda.device_count() > 1 and opt.model == 'CNN': 
                 input_ids = data[0].cuda(non_blocking=True)
                 #attention_masks  = data[1].cuda(non_blocking=True)
                 labels = data[2].cuda(non_blocking=True)

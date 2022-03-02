@@ -38,12 +38,26 @@ def train(opt):
         model = nn.DataParallel(model, device_ids=[0,1])
         torch.cuda.set_device(int(opt.cuda))
         model.cuda(int(opt.cuda))
-        loss_function = nn.CrossEntropyLoss().cuda(int(opt.cuda))
+        if opt.weightloss == 1:
+            
+            train_samples = [len([i for i in os.listdir('data_train_test_val/train/safe') if '.asm' in i or '.rs' in i]),len([i for i in os.listdir('data_train_test_val/train/unsafe') if '.asm' in i or '.rs' in i])]
+            normedWeights = [1 - (x / sum(train_samples)) for x in train_samples]
+            normedWeights = torch.FloatTensor(normedWeights).cuda(int(opt.cuda))
+            loss_function = nn.CrossEntropyLoss(weight=normedWeights).cuda()
+        else:    
+            loss_function = nn.CrossEntropyLoss().cuda(int(opt.cuda))
     else:
         print('You use only one device')  
         device = torch.device("cuda" if USE_CUDA else "cpu")
-        model.to(device)    
-        loss_function = nn.CrossEntropyLoss()
+        model.to(device)  
+        if opt.weightloss == 1:
+            train_samples = [len([i for i in os.listdir('data_train_test_val/train/safe') if '.asm' in i or '.rs' in i]),len([i for i in os.listdir('data_train_test_val/train/unsafe') if '.asm' in i or '.rs' in i])]
+            normedWeights = [0.4,0.6]
+            normedWeights = [1 - (x / sum(train_samples)) for x in train_samples]
+            normedWeights = torch.FloatTensor(normedWeights).to(device)
+            loss_function = nn.CrossEntropyLoss(weight=normedWeights)
+        else:    
+            loss_function = nn.CrossEntropyLoss()
     
     print('CodeBERT has {:} different named parameters.\n'.format(len(list(model.named_parameters()))))
 
@@ -102,6 +116,11 @@ def train(opt):
             #Calculate loss
             outputs = model(input_ids, attention_masks, token_type_ids)
             loss = loss_function(outputs, labels)
+            
+            if opt.focalloss ==1: 
+                pt = torch.exp(-loss)
+                loss = opt.alpha * (1-pt)**opt.gamma * loss
+                
             total_train_loss += loss.item()
             
             #Precision, Recall, F1
@@ -172,6 +191,10 @@ def train(opt):
                 #Calculate loss
                 outputs = model(input_ids, attention_masks, token_type_ids)
                 loss = loss_function(outputs, labels)
+                
+                if opt.focalloss ==1: 
+                    pt = torch.exp(-loss)
+                    loss = opt.alpha * (1-pt)**opt.gamma * loss
                 
                 #Precision, Recall, F1
                 max_val, max_idx = torch.max(outputs.data, dim=1)

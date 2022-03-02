@@ -19,8 +19,10 @@ class Tokenizer():
         for subdir , dirs, files in os.walk(self.data_path): 
              for file in tqdm(files):
                  file_path = os.path.join(subdir, file)
-                 if file.endswith(".rs"):
+                 if file.endswith(".rs") or file.endswith(".asm"):
                      #print(file)
+                 
+                    
                      
                      with open(file_path, "r", errors='ignore') as f:
                          code_snippet = str(f.read())

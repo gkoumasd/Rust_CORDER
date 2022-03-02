@@ -26,18 +26,24 @@
 ### Training
 
 4. To train the CNN model run    
-    - ```python train.py```
+    - ```python train.py --model CNN```
+    
+5. To train the BiLDTM model run    
+    - ```python train.py --model BiLSTM```    
     
     
 ### Testing
 
-4. To test the CNN model run    
-    - ```python test.py``` 
+6. To test the CNN model run    
+    - ```python test.py --model CNN``` 
+    
+7. To test the BiLSTM model run   
+- ```python test.py --model BiLSTM```  
     
 ### Results
 
 
-1. Performance on test subset:
+1. CNN Performance on test subset:
        
 ![plot](test.png)       
 

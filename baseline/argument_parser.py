@@ -5,9 +5,10 @@ def parse_arguments():
      parser = argparse.ArgumentParser()
      
      #General arguments
+     parser.add_argument('--model', default="BiLSTM", type=str, help='could be either BiLSTM or CNN')
      parser.add_argument('--cuda', default="0", type=str, help='enables cuda')
      parser.add_argument('--epochs', default=100, type=int, help='number of epochs to train for')
-     parser.add_argument('--model_path', default="best/ccn_classification.bin", help='path to save the model')
+     parser.add_argument('--model_path', default="best/bilstm_classification_asm.bin", help='path to save the model')
      parser.add_argument('--patience', type=int, default=20, help='early stop for training')
      
      parser.add_argument('--batch_size', type=int, default=32, help='batch size')

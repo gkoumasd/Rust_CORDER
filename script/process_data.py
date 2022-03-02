@@ -19,9 +19,10 @@ def parse_arguments():
     #parser.add_argument('--parser', type=str, default="pycparser", help="pycparser, treesitterc, srcml")
     
     parser.add_argument('--data_path', default="treesitter_rust_train_test_val/train")
-    parser.add_argument('--node_type_vocab_path',default="vocab/treesitter_rust/node_type/type.txt")
+    parser.add_argument('--node_type_vocab_path',default="vocab/treesitter_rust/node_type/type_asm.txt")
     parser.add_argument('--node_token_vocab_path', default="vocab/treesitter_rust/node_token/token.txt")
     parser.add_argument('--parser', type=str, default="treesitter_rust", help="pycparser, treesitterc, srcml, treesitter_rust")
+    parser.add_argument('--language', type=str, default="asm", help="ams, rs")
     opt = parser.parse_args()
     return opt
 
@@ -30,6 +31,7 @@ def main(opt):
     node_type_vocab_path = opt.node_type_vocab_path
     node_token_vocab_path = opt.node_token_vocab_path
     parser = opt.parser
+    language = opt.language
     
     if parser == "pycparser":
         processor = PycParserDataProcessor(node_type_vocab_path, node_token_vocab_path, data_path, parser)
@@ -38,7 +40,7 @@ def main(opt):
     if parser == "srcml":
         processor = SrcmlDataProcessor(node_type_vocab_path, node_token_vocab_path, data_path, parser)
     if parser == "treesitter_rust":
-        processor = TreeSitterRustDataProcessor(node_type_vocab_path, node_token_vocab_path, data_path, parser)
+        processor = TreeSitterRustDataProcessor(node_type_vocab_path, node_token_vocab_path, data_path, parser, language)
 
 if __name__ == "__main__":
     opt = parse_arguments()

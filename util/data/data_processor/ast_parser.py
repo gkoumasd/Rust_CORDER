@@ -53,7 +53,7 @@ class ASTParser():
         langs = []
         for file in glob.glob("tree-sitter-*"):    
             if 'asm' in file or 'rust' in file:
-                print(file)
+                #print(file)
                 
                 lang = file.split("-")[2]
                 if not "." in file.split("-")[3]: # c-sharp => c_sharp.so

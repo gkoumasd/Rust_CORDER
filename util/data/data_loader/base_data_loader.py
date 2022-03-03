@@ -118,7 +118,7 @@ class BaseDataLoader():
             samples = 0
       
             for i, ele in enumerate(bucket_data):
-                #print(ele, '\n')
+                
                 if self.is_training == True:
                     if ele["size"] > self.tree_size_threshold_lower and ele["size"] < self.tree_size_threshold_upper:
                         elements.append(ele)

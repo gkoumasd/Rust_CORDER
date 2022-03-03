@@ -16,10 +16,10 @@ After these steps, you can see the data in the treesitter_rust_train_test_val fo
 
     - ```cd script```
     
-    - If you want to process .rs files Run
+    - If you want to process .rs files run
     
         ```source process_data_rs.sh```
-    -If you want to process .asm files Run
+    -If you want to process .asm files run
          ```source process_data_asm.sh```
         
 

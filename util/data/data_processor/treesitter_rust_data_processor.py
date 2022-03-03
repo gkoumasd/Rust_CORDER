@@ -26,11 +26,12 @@ class TreeSitterRustDataProcessor(DataProcessor):
         
         for subdir , dirs, files in os.walk(directory): 
             for file in tqdm(files):
+                
                 if file.endswith("."+self.language):
                     try:
                         file_path = os.path.join(subdir,file)
                         file_path = file_path.replace('\\','/') #Windows version
-                        print(file)
+                        #print(file)
                         
                         #Extract the classification label.
                         file_path_splits = file_path.split("/")
@@ -68,9 +69,7 @@ class TreeSitterRustDataProcessor(DataProcessor):
                                  elif len(line)>1 and len(line[1])>0 and '#' not in line[1]: #When the comment followed by code
                                      code += line[1] + ' '
                                      
-                                     
                         #code_snippet = re.sub(r'\W+', ' ', code.decode('utf-8'))
-                        #code_snippet = re.sub(r'\W+', ' ', code.decode('utf-8')) 
                         code_snippet = bytes(code, 'utf-8')
                         
                         #Createa AST representation

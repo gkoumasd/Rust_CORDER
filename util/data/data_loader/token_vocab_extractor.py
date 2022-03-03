@@ -46,7 +46,7 @@ class TokenVocabExtractor():
                     file_path = os.path.join(subdir, file)
                     
                     if file.endswith('.' + self.language):
-                        #print(file_path)
+                       
                         stem_tokens = []
                         
                         with open(file_path, "r", errors='ignore') as f:

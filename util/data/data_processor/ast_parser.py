@@ -37,7 +37,7 @@ class ASTParser():
         
         p = path.join(home, ".tree-sitter", "bin")
         os.chdir(p)   
-        print(p)
+        # print(p)
         
         self.Languages = {}   
         

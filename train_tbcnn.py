@@ -27,7 +27,7 @@ tf.disable_v2_behavior()
 
 def main(train_opt, test_opt):
 
-    train_opt.model_path = os.path.join(train_opt.model_path, 'rust_classification_task')
+    train_opt.model_path = os.path.join(train_opt.model_path, 'asm_classification_task')
     checkfile = os.path.join(train_opt.model_path, 'cnn_tree.ckpt')
     ckpt = tf.train.get_checkpoint_state(train_opt.model_path)
     print("The model path : " + str(checkfile))

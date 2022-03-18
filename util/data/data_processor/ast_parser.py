@@ -30,7 +30,7 @@ class ASTParser():
     import logging
     LOGGER = logging.getLogger('ASTParser')
     
-    def __init__(self, language='rust'):
+    def __init__(self, language='asm'):
          # ------------ To initialize for the treesitter parser ------------
         home = str(Path.home())
         cd = os.getcwd()

@@ -82,11 +82,12 @@ class TokenVocabExtractor():
                             stem_tokens.append(self.stemer.stem(token))
                         all_tokens.extend(stem_tokens)    
                     
-                            
+                    
             unique_tokens = np.unique(all_tokens).tolist()
             ## Add the UKN token in the beggining
             unique_tokens.sort()
             unique_tokens.insert(0,'<UKN>')
+           
             #unique_tokens = unique_tokens[:55000]
             token_file = open(self.node_token_vocab_path, "w")
             for i, token in enumerate(unique_tokens):

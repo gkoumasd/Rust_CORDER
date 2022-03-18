@@ -112,6 +112,8 @@ class BaseDataLoader():
         for bucket_idx in bucket_ids:
             
             bucket_data = self.buckets[bucket_idx]
+            
+            
             random.shuffle(bucket_data)
             
             elements = []

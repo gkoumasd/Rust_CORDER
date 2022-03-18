@@ -17,7 +17,7 @@ def test(opt):
     test_data = test_dataloader.loader()
     
     #Load the model
-    model = torch.load(os.path.join(opt.model_path,'codeBERT_asm32_pl.bin'))
+    model = torch.load(os.path.join(opt.model_path,'codeBERT_asm32_ablation_pl.bin'))
     model.to(device)
     
     print("")
@@ -75,7 +75,7 @@ def test(opt):
 if __name__ == "__main__":
     opt = parse_arguments()
     print(opt)
-    os.environ['CUDA_VISIBLE_DEVICES'] = opt.cuda
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0,1'
     USE_CUDA = torch.cuda.is_available()
     device = torch.device("cuda" if USE_CUDA else "cpu")
     

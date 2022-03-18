@@ -7,16 +7,17 @@ import shutil
 
 def split_data(category):
 
-    directory = 'data/' + category
+    directory = 'data_ase/' + category
     files_lst = []
     
     for dirpath , subdirs, files in os.walk(directory):
         for file in tqdm(files):
-            if file.endswith(".rs"):
+            if file.endswith(".asm"):
                 files_lst.append(os.path.join(dirpath, file))
     
-    
+    #files_lst = files_lst[0:int(0.5*len(files_lst))]
     random.shuffle(files_lst)
+    #print(files_lst)
     
     
     # In the first step we will split the data in training and remaining dataset

@@ -33,6 +33,7 @@ def train(opt):
     
     #Load the model
     model = RobertaClass()
+    print(torch.cuda.device_count())
     if torch.cuda.device_count() > 1:
         print('You use %d GPUs'%torch.cuda.device_count())
         model = nn.DataParallel(model, device_ids=[0,1])
@@ -78,7 +79,7 @@ def train(opt):
     training_stats = []
     
     #Path to save the best model
-    model_dir = 'best/codeBERT_asm32_pl.bin'
+    model_dir = 'best/codeBERT_asm32_ablation_pl.bin'
     best_loss = 10000
     # For each epoch...
     for epoch_i in range(0, opt.epochs):
@@ -278,7 +279,7 @@ def train(opt):
 if __name__ == "__main__":
     opt = parse_arguments()
     print(opt)
-    os.environ['CUDA_VISIBLE_DEVICES'] = opt.cuda
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0,1'
     USE_CUDA = torch.cuda.is_available()
     print(USE_CUDA)
     #device = torch.device("cuda" if USE_CUDA else "cpu")

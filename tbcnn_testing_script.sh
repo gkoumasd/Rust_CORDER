@@ -1,11 +1,11 @@
 PARSER=treesitter_rust
 TRAIN_PATH=${PARSER}_train_test_val/${PARSER}-buckets-train.pkl
 TEST_PATH=${PARSER}_train_test_val/${PARSER}-buckets-test.pkl
-NODE_TYPE_VOCABULARY_PATH=vocab/${PARSER}/node_type/type.txt
+NODE_TYPE_VOCABULARY_PATH=vocab/${PARSER}/node_type/type_asm.txt
 TOKEN_VOCABULARY_PATH=vocab/${PARSER}/node_token/token.txt
 BATCH_SIZE=4
 CHECKPOINT_EVERY=500
-TREE_SIZE_THRESHOLD_UPPER=100
+TREE_SIZE_THRESHOLD_UPPER=1000
 TREE_SIZE_THRESHOLD_LOWER=0
 CUDA=0
 VALIDATING=1

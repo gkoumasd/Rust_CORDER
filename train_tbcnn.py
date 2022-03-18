@@ -27,7 +27,7 @@ tf.disable_v2_behavior()
 
 def main(train_opt, test_opt):
 
-    train_opt.model_path = os.path.join(train_opt.model_path, 'rust_classification_task')
+    train_opt.model_path = os.path.join(train_opt.model_path, 'asm_classification_task')
     checkfile = os.path.join(train_opt.model_path, 'cnn_tree.ckpt')
     ckpt = tf.train.get_checkpoint_state(train_opt.model_path)
     print("The model path : " + str(checkfile))
@@ -63,7 +63,7 @@ def main(train_opt, test_opt):
         for epoch in range(1,  train_opt.epochs + 1):
             train_batch_iterator = ThreadedIterator(train_data_loader.make_minibatch_iterator(), max_queue_size=train_opt.worker)
             for train_step, train_batch_data in enumerate(train_batch_iterator):
-                #print("***************")
+                print("***************")
 
                 # print(train_batch_data["batch_node_index"].shape)
                 # print(train_batch_data["batch_node_type_id"].shape)

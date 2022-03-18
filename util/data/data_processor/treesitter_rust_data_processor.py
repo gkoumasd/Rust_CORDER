@@ -24,14 +24,21 @@ class TreeSitterRustDataProcessor(DataProcessor):
         sizes = []
         count_processed_files = 0
         
+        #counter = 0
+        
         for subdir , dirs, files in os.walk(directory): 
             for file in tqdm(files):
+                #if (counter==10):
+                #    break
+                #print(file)
+                #counter +=1
                 
                 if file.endswith("."+self.language):
+                    
                     try:
                         file_path = os.path.join(subdir,file)
                         file_path = file_path.replace('\\','/') #Windows version
-                        #print(file)
+                        
                         
                         #Extract the classification label.
                         file_path_splits = file_path.split("/")
@@ -88,6 +95,7 @@ class TreeSitterRustDataProcessor(DataProcessor):
                         
                         trees.append(tree_data) 
                         sizes.append(size)
+                        #print(size)
                         
                     except Exception as e:
                         print(e, 'what??')    
@@ -145,6 +153,7 @@ class TreeSitterRustDataProcessor(DataProcessor):
                 if child_type not in ignore_types:
                     queue.append(child)
                     child_type_id = self.node_type_lookup.get(child_type.upper())
+                    #if  child_type_id:
                     #print(child_type.upper(), child_type_id, child_type.upper() )
                     
                     child_token = ""

@@ -12,13 +12,9 @@ def split_data(category):
     
     for dirpath , subdirs, files in os.walk(directory):
         for file in tqdm(files):
-            if file.endswith(".asm"):
+            if file.endswith(".asm") or file.endswith(".rs"):
                 files_lst.append(os.path.join(dirpath, file))
     
-    if category=='safe':
-        print('Total safe files %d'%len(files_lst))
-        files_lst = files_lst[0:int(len(files_lst)*0.7)]
-        print('Total safe files after triim %d'%len(files_lst))
         
     random.shuffle(files_lst)
     

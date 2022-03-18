@@ -51,8 +51,8 @@ class DataProcessor():
              print("Simple trees path exists, loading the pickle....")
              self.trees = pickle.load(open(self.simple_tree_pkl_path, "rb" ))
         else:
-            print("Simple trees path does not exist, loading from raw files....")
             self.trees = self.load_program_data(self.data_path)
+            print("Simple trees path does not exist, loading from raw files....")
             pickle.dump(self.trees, open(self.simple_tree_pkl_path, "wb" ) )
 
         print("Convert trees into training indices....")
@@ -173,8 +173,7 @@ class DataProcessor():
         while queue:
             # print "############"
             node, parent_ind = queue.pop(0)
-            print (node, parent_ind)
-            break
+            #print (node, parent_ind)
             # print parent_ind
             node_ind = len(node_type_id)
             # print "node ind : " + str(node_ind)

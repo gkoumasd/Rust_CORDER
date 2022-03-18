@@ -48,7 +48,7 @@ def parse_arguments():
                         help='path of training data')
     parser.add_argument('--test_path', default="treesitter_rust_train_test_val/treesitter_rust-buckets-val.pkl",
                         help='path of testing data')
-    parser.add_argument('--node_type_vocabulary_path', default="vocab/treesitter_rust/node_type/type.txt",
+    parser.add_argument('--node_type_vocabulary_path', default="vocab/treesitter_rust/node_type/type_asm.txt",
                         help='the path to node type vocab')
     parser.add_argument('--token_vocabulary_path', default="vocab/treesitter_rust/node_token/token.txt",
                         help='the path to node token vocab')
